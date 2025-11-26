@@ -8,7 +8,7 @@ class DeviceUtils {
   }
 
   static const List<String> allowedDeviceIds = [
-    'ID_DO_SEU_APARELHO',
+    'BP2A.250605.031.A3',
     'ID_DO_FILHO_1',
     'ID_DO_FILHO_2',
   ];

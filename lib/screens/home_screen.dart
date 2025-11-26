@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../controllers/joke_controller.dart';
 import '../utils/device_utils.dart';
+import 'debug_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final JokeController controller;
@@ -87,6 +88,16 @@ class _HomeScreenState extends State<HomeScreen>
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'Ver ID do dispositivo',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const DebugScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: 'Resetar contadores',

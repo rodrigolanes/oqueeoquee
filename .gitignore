@@ -52,6 +52,9 @@ app.*.map.json
 *.keystore
 key.properties
 
+# Supabase credentials
+/lib/config/supabase_config.dart
+
 # Local configuration
 /android/local.properties
 

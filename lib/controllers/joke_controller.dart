@@ -33,17 +33,32 @@ class JokeController extends ChangeNotifier {
 
   Future<void> _syncWithSupabase() async {
     if (_supabaseService == null) return;
-    final remoteJokes = await _supabaseService!.fetchJokes();
-    // Mescla piadas locais e remotas, resolvendo por updatedAt
-    Map<int, Joke> merged = {for (var j in _jokes) j.id: j};
-    for (var rj in remoteJokes) {
-      if (!merged.containsKey(rj.id) ||
-          rj.updatedAt.isAfter(merged[rj.id]!.updatedAt)) {
-        merged[rj.id] = rj;
+    try {
+      final remoteJokes = await _supabaseService!.fetchJokes();
+      // Calcula o menor view_count local para novas piadas
+      final minLocalCount = _jokes.isNotEmpty
+          ? _jokes.map((j) => j.viewCount).reduce((a, b) => a < b ? a : b)
+          : 0;
+
+      // Mescla piadas remotas preservando view_count local
+      Map<int, Joke> merged = {for (var j in _jokes) j.id: j};
+      for (var rj in remoteJokes) {
+        if (!merged.containsKey(rj.id)) {
+          // Piada nova do servidor - adiciona com o menor contador local
+          merged[rj.id] = rj.copyWith(viewCount: minLocalCount);
+        } else if (rj.updatedAt.isAfter(merged[rj.id]!.updatedAt)) {
+          // Piada atualizada no servidor - preserva view_count local
+          final localViewCount = merged[rj.id]!.viewCount;
+          merged[rj.id] = rj.copyWith(viewCount: localViewCount);
+        }
+        // Se piada local é mais recente, mantém como está
       }
+      _jokes = merged.values.where((j) => !j.deleted).toList();
+      await _saveJokes();
+    } catch (e) {
+      debugPrint('Erro ao sincronizar com Supabase: $e');
+      // Continua com piadas locais se falhar
     }
-    _jokes = merged.values.where((j) => !j.deleted).toList();
-    await _saveJokes();
   }
 
   Future<void> _loadJokes() async {
@@ -75,7 +90,8 @@ class JokeController extends ChangeNotifier {
     final unviewedJokes = _jokes.where((j) => j.viewCount == minCount).toList();
 
     if (unviewedJokes.isNotEmpty) {
-      // Seleciona a primeira piada não vista (ou menos vista)
+      // Seleciona aleatoriamente uma piada não vista (ou menos vista)
+      unviewedJokes.shuffle();
       _currentJoke = unviewedJokes.first;
       _showAnswer = false;
     }
@@ -83,26 +99,39 @@ class JokeController extends ChangeNotifier {
 
   void toggleAnswer() {
     _showAnswer = !_showAnswer;
+
+    // Se está mostrando a resposta E é a última piada não vista
+    if (_showAnswer) {
+      final unviewedCount = _jokes.where((j) => j.viewCount == 0).length;
+      if (unviewedCount == 1 && _currentJoke?.viewCount == 0) {
+        // Esta é a última piada não vista, notifica quando mostrar a resposta
+        onAllJokesViewed?.call();
+      }
+    }
+
     notifyListeners();
   }
 
   Future<void> nextJoke() async {
     if (_currentJoke != null) {
-      // Incrementa o contador da piada atual
+      // Incrementa o contador da piada atual (apenas local)
       final index = _jokes.indexWhere((j) => j.id == _currentJoke!.id);
       if (index != -1) {
-        _jokes[index] =
-            _jokes[index].copyWith(viewCount: _jokes[index].viewCount + 1);
+        _jokes[index] = _jokes[index].copyWith(
+          viewCount: _jokes[index].viewCount + 1,
+        );
         await _saveJokes();
+        // view_count NÃO é sincronizado - permanece apenas no aparelho
       }
 
-      // Seleciona a próxima piada
-      _selectNextJoke();
-      notifyListeners();
-      // Se todas as piadas foram vistas, reinicia barra e mostra mensagem
+      // Verifica se todas as piadas foram vistas ANTES de selecionar a próxima
       if (_jokes.every((j) => j.viewCount > 0)) {
+        // Reseta sem notificar - a notificação já foi feita no toggleAnswer
         await resetCounters();
-        // TODO: Notificar tela para mostrar mensagem "Todas as piadas vistas! Reiniciando..."
+      } else {
+        // Seleciona a próxima piada
+        _selectNextJoke();
+        notifyListeners();
       }
     }
   }

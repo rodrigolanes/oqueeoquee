@@ -1,0 +1,15 @@
+🎉 Version 5.0.1
+
+✨ What's new:
+• Supabase integration for cloud sync
+• Random joke selection
+• New screen to view device ID
+
+🐛 Bug fixes:
+• Fixed local counter system
+• Performance improvements
+• Minor bug fixes
+
+💾 Important: View counter is now kept only on your device!
+
+Have fun! 🤔🎭

@@ -1,0 +1,15 @@
+🎉 Versão 5.0.1
+
+✨ Novidades:
+• Integração com Supabase para sincronização
+• Seleção aleatória de piadas
+• Nova tela para visualizar ID do dispositivo
+
+🐛 Correções:
+• Ajustado sistema de contadores locais
+• Melhorias de desempenho
+• Correções de bugs menores
+
+💾 Importante: O contador de visualizações agora é mantido apenas no seu aparelho!
+
+Divirta-se! 🤔🎭
