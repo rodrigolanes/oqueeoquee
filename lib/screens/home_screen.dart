@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../controllers/joke_controller.dart';
+import '../utils/device_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   final JokeController controller;
@@ -16,6 +18,8 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
+  bool _isDeviceAllowed = false;
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +31,28 @@ class _HomeScreenState extends State<HomeScreen>
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
 
     widget.controller.addListener(_onJokeChanged);
+
+    _checkDeviceAllowed();
+
+    widget.controller.onAllJokesViewed = () {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Você viu todas as piadas! Reiniciando...'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    };
+  }
+
+  Future<void> _checkDeviceAllowed() async {
+    final allowed = await DeviceUtils.isDeviceAllowed();
+    if (mounted) {
+      setState(() {
+        _isDeviceAllowed = allowed;
+      });
+    }
   }
 
   void _onJokeChanged() {
@@ -126,7 +152,8 @@ class _HomeScreenState extends State<HomeScreen>
                               borderRadius: BorderRadius.circular(10),
                               child: LinearProgressIndicator(
                                 value: viewedJokes / totalJokes,
-                                backgroundColor: Colors.white.withOpacity(0.5),
+                                backgroundColor:
+                                    Colors.white.withValues(alpha: 0.5),
                                 valueColor: const AlwaysStoppedAnimation<Color>(
                                     Colors.green),
                                 minHeight: 8,
@@ -229,6 +256,27 @@ class _HomeScreenState extends State<HomeScreen>
                       padding: const EdgeInsets.all(24.0),
                       child: Column(
                         children: [
+                          if (_isDeviceAllowed) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.add),
+                                  tooltip: 'Nova piada',
+                                  onPressed: () {
+                                    // TODO: Implementar ação de adicionar piada
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  tooltip: 'Editar piada',
+                                  onPressed: () {
+                                    // TODO: Implementar ação de editar piada
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
                           if (!showAnswer)
                             SizedBox(
                               width: double.infinity,
