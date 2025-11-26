@@ -62,7 +62,17 @@ No GitHub: Settings → Secrets → Actions → New repository secret
 
 **Nota**: Estas são suas credenciais reais que você configurou ao criar o keystore.
 
-### 3. Service Account da Google Play
+### 3. Credenciais do Supabase
+- `SUPABASE_URL` = URL do seu projeto Supabase
+- `SUPABASE_ANON_KEY` = Chave pública anon do Supabase
+
+**Como encontrar**:
+1. Acesse: https://supabase.com/dashboard
+2. Selecione seu projeto
+3. Settings → API
+4. Project URL e anon/public key
+
+### 4. Service Account da Google Play
 
 #### Passo 1: Criar Service Account
 1. Acesse: https://play.google.com/console
@@ -226,6 +236,8 @@ git push origin main --tags
 - [ ] Adicionar `KEYSTORE_PASSWORD` nos secrets
 - [ ] Adicionar `KEY_PASSWORD` nos secrets
 - [ ] Adicionar `KEY_ALIAS` nos secrets
+- [ ] Adicionar `SUPABASE_URL` nos secrets
+- [ ] Adicionar `SUPABASE_ANON_KEY` nos secrets
 - [ ] Criar Service Account no Google Cloud
 - [ ] Adicionar `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON` nos secrets
 - [ ] Conceder permissões no Play Console
