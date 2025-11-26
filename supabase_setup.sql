@@ -31,26 +31,26 @@ CREATE POLICY "Permitir leitura pública de piadas"
 
 -- 6. Inserir piadas iniciais
 INSERT INTO jokes (id, question, answer, view_count, deleted, created_at, updated_at) VALUES
-  (1, 'O que é o que é?' || E'\n' || 'Tem coroa, mas não é rei, tem escama, mas não é peixe?', 'O abacaxi', 0, false, NOW(), NOW()),
-  (2, 'O que é o que é?' || E'\n' || 'Cai em pé e corre deitado?', 'A chuva', 0, false, NOW(), NOW()),
-  (3, 'O que é o que é?' || E'\n' || 'Tem dentes mas não morde?', 'O garfo', 0, false, NOW(), NOW()),
-  (4, 'O que é o que é?' || E'\n' || 'Quanto mais se perde, maior fica?', 'O buraco', 0, false, NOW(), NOW()),
-  (5, 'O que é o que é?' || E'\n' || 'É surdo e mudo, mas conta tudo?', 'O livro', 0, false, NOW(), NOW()),
-  (6, 'O que é o que é?' || E'\n' || 'Tem pescoço mas não tem cabeça?', 'A garrafa', 0, false, NOW(), NOW()),
-  (7, 'O que é o que é?' || E'\n' || 'Sobe quando a chuva desce?', 'O guarda-chuva', 0, false, NOW(), NOW()),
-  (8, 'O que é o que é?' || E'\n' || 'Tem asa mas não voa?', 'A xícara', 0, false, NOW(), NOW()),
-  (9, 'O que é o que é?' || E'\n' || 'Enche uma casa mas não enche uma mão?', 'O botão', 0, false, NOW(), NOW()),
-  (10, 'O que é o que é?' || E'\n' || 'Tem cabeça mas não pensa?', 'O alho', 0, false, NOW(), NOW()),
-  (11, 'O que é o que é?' || E'\n' || 'Quebra quando se fala?', 'O segredo', 0, false, NOW(), NOW()),
-  (12, 'O que é o que é?' || E'\n' || 'Tem linha mas não é carretel?', 'O caderno', 0, false, NOW(), NOW()),
-  (13, 'O que é o que é?' || E'\n' || 'Entre na água mas não se molha?', 'A sombra', 0, false, NOW(), NOW()),
-  (14, 'O que é o que é?' || E'\n' || 'Vive batendo e nunca apanha?', 'O coração', 0, false, NOW(), NOW()),
-  (15, 'O que é o que é?' || E'\n' || 'Tem pernas mas não anda?', 'A mesa', 0, false, NOW(), NOW()),
-  (16, 'O que é o que é?' || E'\n' || 'Corre a casa toda e depois dorme num canto?', 'A vassoura', 0, false, NOW(), NOW()),
-  (17, 'O que é o que é?' || E'\n' || 'Respira mas não tem pulmão?', 'O acordeon (sanfona)', 0, false, NOW(), NOW()),
-  (18, 'O que é o que é?' || E'\n' || 'Tem cinco dedos mas não tem unha?', 'A luva', 0, false, NOW(), NOW()),
-  (19, 'O que é o que é?' || E'\n' || 'Está sempre no meio da rua?', 'A letra U', 0, false, NOW(), NOW()),
-  (20, 'O que é o que é?' || E'\n' || 'Tem chapéu mas não tem cabeça, tem boca mas não fala?', 'O cogumelo', 0, false, NOW(), NOW())
+  (1, 'Tem coroa, mas não é rei, tem escama, mas não é peixe?', 'O abacaxi', 0, false, NOW(), NOW()),
+  (2, 'Cai em pé e corre deitado?', 'A chuva', 0, false, NOW(), NOW()),
+  (3, 'Tem dentes mas não morde?', 'O garfo', 0, false, NOW(), NOW()),
+  (4, 'Quanto mais se perde, maior fica?', 'O buraco', 0, false, NOW(), NOW()),
+  (5, 'É surdo e mudo, mas conta tudo?', 'O livro', 0, false, NOW(), NOW()),
+  (6, 'Tem pescoço mas não tem cabeça?', 'A garrafa', 0, false, NOW(), NOW()),
+  (7, 'Sobe quando a chuva desce?', 'O guarda-chuva', 0, false, NOW(), NOW()),
+  (8, 'Tem asa mas não voa?', 'A xícara', 0, false, NOW(), NOW()),
+  (9, 'Enche uma casa mas não enche uma mão?', 'O botão', 0, false, NOW(), NOW()),
+  (10, 'Tem cabeça mas não pensa?', 'O alho', 0, false, NOW(), NOW()),
+  (11, 'Quebra quando se fala?', 'O segredo', 0, false, NOW(), NOW()),
+  (12, 'Tem linha mas não é carretel?', 'O caderno', 0, false, NOW(), NOW()),
+  (13, 'Entre na água mas não se molha?', 'A sombra', 0, false, NOW(), NOW()),
+  (14, 'Vive batendo e nunca apanha?', 'O coração', 0, false, NOW(), NOW()),
+  (15, 'Tem pernas mas não anda?', 'A mesa', 0, false, NOW(), NOW()),
+  (16, 'Corre a casa toda e depois dorme num canto?', 'A vassoura', 0, false, NOW(), NOW()),
+  (17, 'Respira mas não tem pulmão?', 'O acordeon (sanfona)', 0, false, NOW(), NOW()),
+  (18, 'Tem cinco dedos mas não tem unha?', 'A luva', 0, false, NOW(), NOW()),
+  (19, 'Está sempre no meio da rua?', 'A letra U', 0, false, NOW(), NOW()),
+  (20, 'Tem chapéu mas não tem cabeça, tem boca mas não fala?', 'O cogumelo', 0, false, NOW(), NOW())
 ON CONFLICT (id) DO NOTHING;
 
 -- 7. Verificar inserção

@@ -82,15 +82,3 @@ jobs:
         status: completed  # Opções: draft, completed
         whatsNewDirectory: play_store/whatsnew/
         mappingFile: build/app/outputs/mapping/release/mapping.txt
-        
-    - name: Criar GitHub Release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        files: |
-          build/app/outputs/bundle/release/app-release.aab
-        body_path: release_notes.txt
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
