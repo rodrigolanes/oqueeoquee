@@ -9,8 +9,9 @@ class DeviceUtils {
 
   static const List<String> allowedDeviceIds = [
     'BP2A.250605.031.A3',
-    'ID_DO_FILHO_1',
+    'TP1A.220624.014',
     'ID_DO_FILHO_2',
+    'UE1A.230829.036.A4', // Emulator Android
   ];
 
   static Future<bool> isDeviceAllowed() async {

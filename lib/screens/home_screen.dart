@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 
 import '../controllers/joke_controller.dart';
 import '../utils/device_utils.dart';
+import 'create_joke_screen.dart';
 import 'debug_screen.dart';
+import 'edit_joke_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final JokeController controller;
@@ -150,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Vistas: $viewedJokes/$totalJokes',
+                            'Vistas: ${viewedJokes + 1}/$totalJokes',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -162,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen>
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: LinearProgressIndicator(
-                                value: viewedJokes / totalJokes,
+                                value: (viewedJokes + 1) / totalJokes,
                                 backgroundColor:
                                     Colors.white.withValues(alpha: 0.5),
                                 valueColor: const AlwaysStoppedAnimation<Color>(
@@ -269,24 +271,68 @@ class _HomeScreenState extends State<HomeScreen>
                         children: [
                           if (_isDeviceAllowed) ...[
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                IconButton(
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    final navigator = Navigator.of(context);
+                                    final messenger =
+                                        ScaffoldMessenger.of(context);
+                                    final result = await navigator.push<bool>(
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateJokeScreen(
+                                          controller: widget.controller,
+                                        ),
+                                      ),
+                                    );
+                                    if (result == true && mounted) {
+                                      messenger.showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Piada adicionada com sucesso!'),
+                                        ),
+                                      );
+                                    }
+                                  },
                                   icon: const Icon(Icons.add),
-                                  tooltip: 'Nova piada',
-                                  onPressed: () {
-                                    // TODO: Implementar ação de adicionar piada
-                                  },
+                                  label: const Text('Nova Piada'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.orange,
+                                    foregroundColor: Colors.white,
+                                  ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  tooltip: 'Editar piada',
-                                  onPressed: () {
-                                    // TODO: Implementar ação de editar piada
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    final navigator = Navigator.of(context);
+                                    final messenger =
+                                        ScaffoldMessenger.of(context);
+                                    final result = await navigator.push<bool>(
+                                      MaterialPageRoute(
+                                        builder: (context) => EditJokeScreen(
+                                          joke: joke,
+                                          controller: widget.controller,
+                                        ),
+                                      ),
+                                    );
+                                    if (result == true && mounted) {
+                                      messenger.showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'Piada atualizada/deletada!'),
+                                        ),
+                                      );
+                                    }
                                   },
+                                  icon: const Icon(Icons.edit),
+                                  label: const Text('Editar'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.purple,
+                                    foregroundColor: Colors.white,
+                                  ),
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 16),
                           ],
                           if (!showAnswer)
                             SizedBox(

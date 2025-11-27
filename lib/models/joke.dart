@@ -30,27 +30,46 @@ class Joke {
   }
 
   factory Joke.fromJson(Map<String, dynamic> json) {
-    return Joke(
-      id: json['id'],
-      question: json['question'],
-      answer: json['answer'],
-      viewCount: json['view_count'] ?? json['viewCount'] ?? 0,
-      deleted: json['deleted'] ?? false,
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
-    );
+    try {
+      return Joke(
+        id: json['id'],
+        question: json['question'],
+        answer: json['answer'],
+        viewCount: json['view_count'] ?? json['viewCount'] ?? 0,
+        deleted: json['deleted'] ?? false,
+        createdAt: json['created_at'] != null
+            ? DateTime.parse(json['created_at'])
+            : DateTime.now(),
+        updatedAt: json['updated_at'] != null
+            ? DateTime.parse(json['updated_at'])
+            : DateTime.now(),
+      );
+    } catch (e) {
+      // Se falhar, retorna com valores padrão
+      return Joke(
+        id: json['id'] ?? 0,
+        question: json['question'] ?? '',
+        answer: json['answer'] ?? '',
+        viewCount: 0,
+        deleted: false,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+    }
   }
 
   Joke copyWith({
     int? viewCount,
+    String? question,
+    String? answer,
     bool? deleted,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return Joke(
       id: id,
-      question: question,
-      answer: answer,
+      question: question ?? this.question,
+      answer: answer ?? this.answer,
       viewCount: viewCount ?? this.viewCount,
       deleted: deleted ?? this.deleted,
       createdAt: createdAt ?? this.createdAt,
