@@ -2,6 +2,38 @@
 
 ## 📋 Versões
 
+### [5.1.0] - 2025-11-27 (Build 21)
+#### 🌟 Sincronização na Nuvem
+
+**Piadas agora vêm direto da nuvem!**
+
+#### ✨ Novidades
+- Sistema de sincronização com Supabase
+- Piadas atualizadas automaticamente do servidor
+- Novas piadas adicionadas sem precisar atualizar o app
+- Contador de progresso aprimorado (começa em 1)
+- Sistema de migração de dados robusto
+
+#### 🛠️ Melhorias
+- Sincronização em background mais confiável
+- Detecção e atualização automática de piadas modificadas
+- Melhor tratamento de erros de rede
+- Performance otimizada na sincronização
+
+#### 🐛 Correções
+- Resolvido crash ao atualizar da versão anterior
+- Corrigido problema de dados corrompidos após update
+- Melhorada estabilidade geral do app
+- Sincronização de status de piadas (ativas/deletadas)
+
+#### 📦 Arquitetura
+- Integração completa com Supabase
+- Sistema offline-first (funciona sem internet)
+- Migração automática de estrutura de dados
+- Remoção de piadas hardcoded (agora 100% na nuvem)
+
+---
+
 ### [5.0.0] - 2025-11-15 (Build 14)
 #### 🎉 Renovação Completa
 
@@ -64,19 +96,13 @@
 
 ## 🔮 Próximas Versões Planejadas
 
-### [5.1.0] - Em Planejamento
-- Adicionar mais 30 piadas
+### [5.2.0] - Em Planejamento
 - Modo escuro
 - Compartilhamento de piadas
-
-### [5.2.0] - Futuro
-- Categorias de piadas
-- Modo quiz/desafio
-- Piadas favoritas
+- Mais categorias de piadas
 
 ### [6.0.0] - Visão de Longo Prazo
 - Suporte a múltiplos idiomas
-- Backend com piadas online
 - Sistema de conquistas
 - Ranking de usuários
 
@@ -86,12 +112,20 @@
 
 | Versão | Build | Data       | Downloads | Nota Média |
 |--------|-------|------------|-----------|------------|
+| 5.1.0  | 21    | 2025-11-27 | -         | -          |
 | 5.0.0  | 14    | 2025-11-15 | -         | -          |
 | 4.0.0  | 13    | 2011-07-12 | -         | -          |
 
 ---
 
 ## 🐛 Correções de Bugs
+
+### Versão 5.1.0
+- Corrigido crash ao atualizar app da Play Store
+- Corrigido dados corrompidos entre versões
+- Melhorada sincronização com servidor
+- Corrigido campo deleted não sincronizando
+- Tratamento robusto de erros de parsing JSON
 
 ### Versão 5.0.0
 - Corrigido problema de compatibilidade com Android 14

@@ -1,15 +1,16 @@
-🎉 Version 5.0.1
+🎉 Version 5.1.0
 
 ✨ What's new:
-• Supabase integration for cloud sync
-• Random joke selection
-• New screen to view device ID
+• Jokes now synced with the cloud
+• Automatically receive new jokes when added
+• Improved progress counter (starts at 1)
+• Enhanced data migration system
 
 🐛 Bug fixes:
-• Fixed local counter system
-• Performance improvements
-• Minor bug fixes
+• Fixed app crash when updating
+• More reliable server synchronization
+• Stability and performance improvements
 
-💾 Important: View counter is now kept only on your device!
+💾 Important: View counter remains stored only on your device!
 
 Have fun! 🤔🎭

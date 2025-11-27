@@ -1,15 +1,16 @@
-🎉 Versão 5.0.1
+🎉 Versão 5.1.0
 
 ✨ Novidades:
-• Integração com Supabase para sincronização
-• Seleção aleatória de piadas
-• Nova tela para visualizar ID do dispositivo
+• Piadas agora sincronizadas com a nuvem
+• Receba automaticamente novas piadas quando forem adicionadas
+• Contador de progresso aprimorado (começa em 1)
+• Sistema de migração de dados melhorado
 
 🐛 Correções:
-• Ajustado sistema de contadores locais
-• Melhorias de desempenho
-• Correções de bugs menores
+• Resolvido problema de crash ao atualizar o app
+• Sincronização mais confiável com o servidor
+• Melhorias de estabilidade e desempenho
 
-💾 Importante: O contador de visualizações agora é mantido apenas no seu aparelho!
+💾 Importante: O contador de visualizações continua sendo mantido apenas no seu aparelho!
 
 Divirta-se! 🤔🎭
