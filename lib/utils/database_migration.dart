@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class DatabaseMigration {
   static const String _versionKey = 'database_version';
-  static const int currentVersion = 1;
+  static const int currentVersion = 2;
 
   /// Executa migrações necessárias do banco local
   static Future<void> migrate() async {
@@ -16,6 +16,9 @@ class DatabaseMigration {
       // Executar migrações em ordem
       if (savedVersion < 1) {
         await _migrateToV1(prefs);
+      }
+      if (savedVersion < 2) {
+        await _migrateToV2(prefs);
       }
 
       // Salvar nova versão
@@ -40,6 +43,19 @@ class DatabaseMigration {
       // Remove dados corrompidos
       await prefs.remove('jokes');
     }
+  }
+
+  /// Migração para versão 2: Limpar tudo e começar do zero com Supabase
+  static Future<void> _migrateToV2(SharedPreferences prefs) async {
+    debugPrint('Executando migração v1 -> v2: Limpando banco local');
+
+    // Limpa TODOS os dados salvos localmente
+    await prefs.clear();
+
+    // Redefine a versão (porque clear() removeu tudo)
+    await prefs.setInt(_versionKey, 2);
+
+    debugPrint('Migração v2: Banco local resetado. Piadas virão do Supabase.');
   }
 
   /// Limpa completamente o banco local (use em caso de emergência)

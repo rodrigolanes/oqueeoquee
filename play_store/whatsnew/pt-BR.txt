@@ -1,4 +1,4 @@
-🎉 Versão 5.1.0
+🎉 Versão 5.1.1
 
 ✨ Novidades:
 • Piadas agora sincronizadas com a nuvem
@@ -9,6 +9,7 @@
 🐛 Correções:
 • Resolvido problema de crash ao atualizar o app
 • Sincronização mais confiável com o servidor
+• Reset automático de dados locais para garantir compatibilidade
 • Melhorias de estabilidade e desempenho
 
 💾 Importante: O contador de visualizações continua sendo mantido apenas no seu aparelho!

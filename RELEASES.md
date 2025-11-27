@@ -2,6 +2,29 @@
 
 ## 📋 Versões
 
+### [5.1.1] - 2025-11-27 (Build 22)
+#### 🔧 Correções e Melhorias
+
+**Ajustes de estabilidade e usabilidade**
+
+#### 🛠️ Melhorias
+- Tela de debug agora acessível por toque triplo no título (easter egg)
+- Removido botão de debug visível na AppBar
+- Migração automática com reset completo do banco local na primeira execução
+- Padronização do campo view_count (removido condicional de compatibilidade)
+
+#### 🐛 Correções
+- Garantido reset completo ao atualizar da versão anterior
+- Melhorada compatibilidade entre versões
+- Campo view_count agora usa apenas snake_case consistentemente
+
+#### 📦 Arquitetura
+- Database migration versão 2 com limpeza total de dados locais
+- Simplificação do código de deserialização de piadas
+- UI mais limpa sem elementos de debug visíveis
+
+---
+
 ### [5.1.0] - 2025-11-27 (Build 21)
 #### 🌟 Sincronização na Nuvem
 
@@ -112,6 +135,7 @@
 
 | Versão | Build | Data       | Downloads | Nota Média |
 |--------|-------|------------|-----------|------------|
+| 5.1.1  | 22    | 2025-11-27 | -         | -          |
 | 5.1.0  | 21    | 2025-11-27 | -         | -          |
 | 5.0.0  | 14    | 2025-11-15 | -         | -          |
 | 4.0.0  | 13    | 2011-07-12 | -         | -          |
@@ -119,6 +143,12 @@
 ---
 
 ## 🐛 Correções de Bugs
+
+### Versão 5.1.1
+- Reset automático de dados locais ao atualizar
+- Removido condicional desnecessário em view_count
+- Easter egg para debug (toque triplo no título)
+- Interface mais limpa sem elementos de debug visíveis
 
 ### Versão 5.1.0
 - Corrigido crash ao atualizar app da Play Store

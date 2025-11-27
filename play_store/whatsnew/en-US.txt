@@ -1,4 +1,4 @@
-🎉 Version 5.1.0
+🎉 Version 5.1.1
 
 ✨ What's new:
 • Jokes now synced with the cloud
@@ -9,6 +9,7 @@
 🐛 Bug fixes:
 • Fixed app crash when updating
 • More reliable server synchronization
+• Automatic local data reset for compatibility
 • Stability and performance improvements
 
 💾 Important: View counter remains stored only on your device!

@@ -35,7 +35,7 @@ class Joke {
         id: json['id'],
         question: json['question'],
         answer: json['answer'],
-        viewCount: json['view_count'] ?? json['viewCount'] ?? 0,
+        viewCount: json['view_count'] ?? 0,
         deleted: json['deleted'] ?? false,
         createdAt: json['created_at'] != null
             ? DateTime.parse(json['created_at'])

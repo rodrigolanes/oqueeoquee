@@ -22,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen>
   late Animation<double> _fadeAnimation;
 
   bool _isDeviceAllowed = false;
+  int _titleTapCount = 0;
+  DateTime? _lastTitleTap;
 
   @override
   void initState() {
@@ -58,6 +60,26 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  void _onTitleTap() {
+    final now = DateTime.now();
+
+    // Reseta contador se passou mais de 2 segundos desde o último toque
+    if (_lastTitleTap != null && now.difference(_lastTitleTap!).inSeconds > 2) {
+      _titleTapCount = 0;
+    }
+
+    _lastTitleTap = now;
+    _titleTapCount++;
+
+    if (_titleTapCount >= 3) {
+      _titleTapCount = 0;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const DebugScreen()),
+      );
+    }
+  }
+
   void _onJokeChanged() {
     if (mounted) {
       setState(() {});
@@ -83,23 +105,16 @@ class _HomeScreenState extends State<HomeScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('O que é o que é? 🤔'),
+        title: GestureDetector(
+          onTap: _onTitleTap,
+          child: const Text('O que é o que é? 🤔'),
+        ),
         centerTitle: true,
         backgroundColor: Colors.amber,
         foregroundColor: Colors.black87,
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            tooltip: 'Ver ID do dispositivo',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const DebugScreen()),
-              );
-            },
-          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: 'Resetar contadores',
