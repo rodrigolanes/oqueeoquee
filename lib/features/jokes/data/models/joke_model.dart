@@ -20,7 +20,7 @@ class JokeModel extends Joke {
   /// Usado para deserializar dados do banco local ou API remota
   factory JokeModel.fromJson(Map<String, dynamic> json) {
     final createdAt = DateTime.parse(json['created_at'] as String);
-    
+
     return JokeModel(
       id: json['id'] as int,
       question: json['question'] as String,
