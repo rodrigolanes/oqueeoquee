@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../features/jokes/presentation/providers/joke_provider.dart';
+import '../utils/device_utils.dart';
 import 'debug_screen.dart';
 import 'create_joke_screen.dart';
 import 'edit_joke_screen.dart';
@@ -21,6 +22,30 @@ class _HomeScreenState extends State<HomeScreen>
 
   int _titleTapCount = 0;
   DateTime? _lastTitleTap;
+
+  void _showUnauthorizedDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.lock, color: Colors.red),
+            SizedBox(width: 8),
+            Text('Acesso Negado'),
+          ],
+        ),
+        content: const Text(
+          'Este dispositivo não tem permissão para administrar piadas.\n\nApenas dispositivos autorizados podem criar ou editar piadas.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Entendi'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -116,14 +141,23 @@ class _HomeScreenState extends State<HomeScreen>
                   title: const Text('Criar Nova Piada'),
                   onTap: () async {
                     Navigator.pop(context);
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CreateJokeScreen(),
-                      ),
-                    );
-                    if (result == true && mounted) {
-                      jokeProvider.loadNextJoke();
+
+                    final isAllowed = await DeviceUtils.isDeviceAllowed();
+                    if (!isAllowed && mounted) {
+                      _showUnauthorizedDialog(context);
+                      return;
+                    }
+
+                    if (mounted) {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateJokeScreen(),
+                        ),
+                      );
+                      if (result == true && mounted) {
+                        jokeProvider.loadNextJoke();
+                      }
                     }
                   },
                 ),
@@ -135,15 +169,24 @@ class _HomeScreenState extends State<HomeScreen>
                       ? null
                       : () async {
                           Navigator.pop(context);
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  EditJokeScreen(joke: joke),
-                            ),
-                          );
-                          if (result == true && mounted) {
-                            jokeProvider.loadNextJoke();
+
+                          final isAllowed = await DeviceUtils.isDeviceAllowed();
+                          if (!isAllowed && mounted) {
+                            _showUnauthorizedDialog(context);
+                            return;
+                          }
+
+                          if (mounted) {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditJokeScreen(joke: joke),
+                              ),
+                            );
+                            if (result == true && mounted) {
+                              jokeProvider.loadNextJoke();
+                            }
                           }
                         },
                 ),
