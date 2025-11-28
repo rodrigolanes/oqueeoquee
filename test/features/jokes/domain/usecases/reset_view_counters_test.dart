@@ -17,7 +17,8 @@ void main() {
     usecase = ResetViewCounters(mockRepository);
   });
 
-  test('deve resetar todos os contadores de visualização no repositório', () async {
+  test('deve resetar todos os contadores de visualização no repositório',
+      () async {
     // arrange
     when(mockRepository.resetViewCounters())
         .thenAnswer((_) async => const Right(null));
