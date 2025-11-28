@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../features/jokes/presentation/providers/joke_provider.dart';
 import '../utils/device_utils.dart';
-import 'debug_screen.dart';
 import 'create_joke_screen.dart';
+import 'debug_screen.dart';
 import 'edit_joke_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -106,17 +106,17 @@ class _HomeScreenState extends State<HomeScreen>
                             colors: [Colors.green, Colors.green.shade300],
                           ),
                         ),
-                        child: Column(
+                        child: const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const Text(
+                            Text(
                               '🤔',
                               style: TextStyle(fontSize: 48),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Text(
-                              'O que é o que é?',
+                              'O que é o que é',
                               style: TextStyle(
                                 color: Colors.black87,
                                 fontSize: 24,
@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen>
           appBar: AppBar(
             title: GestureDetector(
               onTap: _onTitleTap,
-              child: const Text('O que é o que é? 🤔'),
+              child: const Text('O que é o que é'),
             ),
             centerTitle: true,
             backgroundColor: Colors.green,
