@@ -23,7 +23,7 @@ class JokeRepositoryImpl implements JokeRepository {
     try {
       // Tenta buscar do cache local primeiro
       final localJokes = await localDataSource.getJokes();
-      
+
       if (localJokes.isNotEmpty) {
         return Right(localJokes);
       }
@@ -47,21 +47,21 @@ class JokeRepositoryImpl implements JokeRepository {
   Future<Either<Failure, Joke>> getNextJoke() async {
     try {
       final jokes = await localDataSource.getJokes();
-      
+
       if (jokes.isEmpty) {
         return const Left(CacheFailure('Nenhuma piada disponível'));
       }
 
       // Filtra piadas não deletadas
       final activeJokes = jokes.where((joke) => !joke.deleted).toList();
-      
+
       if (activeJokes.isEmpty) {
         return const Left(CacheFailure('Nenhuma piada ativa disponível'));
       }
 
       // Estratégia: retorna a piada com menor viewCount
       activeJokes.sort((a, b) => a.viewCount.compareTo(b.viewCount));
-      
+
       // Se houver empate, usa a mais antiga (menor ID)
       final minViewCount = activeJokes.first.viewCount;
       final leastViewed = activeJokes
@@ -138,7 +138,7 @@ class JokeRepositoryImpl implements JokeRepository {
       // Atualiza no cache local
       final localJokes = await localDataSource.getJokes();
       final index = localJokes.indexWhere((joke) => joke.id == id);
-      
+
       if (index != -1) {
         localJokes[index] = updatedJoke;
         await localDataSource.cacheJokes(localJokes);

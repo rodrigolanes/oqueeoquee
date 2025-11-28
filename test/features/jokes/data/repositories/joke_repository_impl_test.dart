@@ -50,8 +50,7 @@ void main() {
   group('getJokes', () {
     test('deve retornar piadas do cache local quando disponíveis', () async {
       // arrange
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => tJokeModels);
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
 
       // act
       final result = await repository.getJokes();
@@ -64,12 +63,10 @@ void main() {
 
     test('deve buscar remotamente quando cache está vazio', () async {
       // arrange
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => []);
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => []);
       when(mockRemoteDataSource.getJokes())
           .thenAnswer((_) async => tJokeModels);
-      when(mockLocalDataSource.cacheJokes(any))
-          .thenAnswer((_) async => {});
+      when(mockLocalDataSource.cacheJokes(any)).thenAnswer((_) async => {});
 
       // act
       final result = await repository.getJokes();
@@ -95,8 +92,7 @@ void main() {
 
     test('deve retornar ServerFailure quando remoto falhar', () async {
       // arrange
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => []);
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => []);
       when(mockRemoteDataSource.getJokes())
           .thenThrow(ServerException('Erro no servidor'));
 
@@ -111,8 +107,7 @@ void main() {
   group('getNextJoke', () {
     test('deve retornar piada com menor viewCount', () async {
       // arrange
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => tJokeModels);
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
 
       // act
       final result = await repository.getNextJoke();
@@ -149,8 +144,7 @@ void main() {
           updatedAt: DateTime.utc(2025, 1, 1),
         ),
       ];
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => tiedJokes);
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tiedJokes);
 
       // act
       final result = await repository.getNextJoke();
@@ -164,8 +158,7 @@ void main() {
 
     test('deve retornar CacheFailure quando não houver piadas', () async {
       // arrange
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => []);
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => []);
 
       // act
       final result = await repository.getNextJoke();
@@ -240,8 +233,7 @@ void main() {
   group('resetViewCounters', () {
     test('deve resetar contadores com sucesso', () async {
       // arrange
-      when(mockLocalDataSource.resetViewCounters())
-          .thenAnswer((_) async => {});
+      when(mockLocalDataSource.resetViewCounters()).thenAnswer((_) async => {});
 
       // act
       final result = await repository.resetViewCounters();
@@ -269,10 +261,8 @@ void main() {
         question: anyNamed('question'),
         answer: anyNamed('answer'),
       )).thenAnswer((_) async => tNewJoke);
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => tJokeModels);
-      when(mockLocalDataSource.cacheJokes(any))
-          .thenAnswer((_) async => {});
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
+      when(mockLocalDataSource.cacheJokes(any)).thenAnswer((_) async => {});
 
       // act
       final result = await repository.createJoke(
@@ -289,7 +279,8 @@ void main() {
       verify(mockLocalDataSource.cacheJokes(any));
     });
 
-    test('deve retornar ValidationFailure quando dados forem inválidos', () async {
+    test('deve retornar ValidationFailure quando dados forem inválidos',
+        () async {
       // arrange
       when(mockRemoteDataSource.createJoke(
         question: anyNamed('question'),
@@ -320,10 +311,8 @@ void main() {
         question: anyNamed('question'),
         answer: anyNamed('answer'),
       )).thenAnswer((_) async => tUpdatedJoke);
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => tJokeModels);
-      when(mockLocalDataSource.cacheJokes(any))
-          .thenAnswer((_) async => {});
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
+      when(mockLocalDataSource.cacheJokes(any)).thenAnswer((_) async => {});
 
       // act
       final result = await repository.updateJoke(
@@ -345,10 +334,8 @@ void main() {
   group('deleteJoke', () {
     test('deve deletar no remoto e marcar como deletada no cache', () async {
       // arrange
-      when(mockRemoteDataSource.deleteJoke(any))
-          .thenAnswer((_) async => {});
-      when(mockLocalDataSource.deleteJoke(any))
-          .thenAnswer((_) async => {});
+      when(mockRemoteDataSource.deleteJoke(any)).thenAnswer((_) async => {});
+      when(mockLocalDataSource.deleteJoke(any)).thenAnswer((_) async => {});
 
       // act
       final result = await repository.deleteJoke(1);
@@ -365,14 +352,11 @@ void main() {
       // arrange
       when(mockRemoteDataSource.getJokes())
           .thenAnswer((_) async => tJokeModels);
-      when(mockLocalDataSource.getJokes())
-          .thenAnswer((_) async => tJokeModels);
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
       when(mockRemoteDataSource.syncViewCounts(any))
           .thenAnswer((_) async => {});
-      when(mockLocalDataSource.clearCache())
-          .thenAnswer((_) async => {});
-      when(mockLocalDataSource.cacheJokes(any))
-          .thenAnswer((_) async => {});
+      when(mockLocalDataSource.clearCache()).thenAnswer((_) async => {});
+      when(mockLocalDataSource.cacheJokes(any)).thenAnswer((_) async => {});
 
       // act
       final result = await repository.syncWithRemote();
@@ -387,8 +371,7 @@ void main() {
 
     test('deve retornar ServerFailure quando remoto falhar', () async {
       // arrange
-      when(mockRemoteDataSource.getJokes())
-          .thenThrow(ServerException('Erro'));
+      when(mockRemoteDataSource.getJokes()).thenThrow(ServerException('Erro'));
 
       // act
       final result = await repository.syncWithRemote();
