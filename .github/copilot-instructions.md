@@ -10,18 +10,20 @@ Fornecer uma experiência divertida e simples de piadas, com um sistema intelige
 
 ## 🏗️ Arquitetura
 
-### Estrutura MVC Simples
-- **Models** (`lib/models/`): Dados puros (Joke)
-- **Controllers** (`lib/controllers/`): Lógica de negócio (JokeController)
-- **Views** (`lib/screens/`): Interface do usuário (HomeScreen)
-- **Data** (`lib/data/`): Dados estáticos (lista de piadas)
+### Clean Architecture (3 Camadas)
+- **Domain** (`lib/features/jokes/domain/`): Entidades e contratos (Joke, JokeRepository)
+- **Data** (`lib/features/jokes/data/`): Implementações e fontes de dados (JokeRepositoryImpl, Supabase, Local)
+- **Presentation** (`lib/features/jokes/presentation/`): UI e providers (JokeProvider, HomeScreen)
+- **Utils** (`lib/utils/`): Utilitários (DeviceUtils para autorização)
 
-### Princípios de Código
-1. **Simplicidade**: Mantenha o código simples e direto
-2. **Legibilidade**: Prefira código claro sobre código "inteligente"
-3. **Single Responsibility**: Cada classe tem uma única responsabilidade
-4. **Imutabilidade**: Use `final` sempre que possível
-5. **Estado gerenciado**: Use `ChangeNotifier` para gerenciamento de estado
+### Princípios de Código (SOLID)
+1. **Single Responsibility**: Cada classe tem uma única responsabilidade
+2. **Open/Closed**: Aberto para extensão, fechado para modificação
+3. **Liskov Substitution**: Interfaces bem definidas (repositories)
+4. **Interface Segregation**: Contratos específicos
+5. **Dependency Inversion**: Dependências através de abstrações
+6. **Imutabilidade**: Use `final` sempre que possível
+7. **Estado gerenciado**: Provider com ChangeNotifier
 
 ## 🔧 Padrões de Código
 
@@ -48,19 +50,28 @@ Fornecer uma experiência divertida e simples de piadas, com um sistema intelige
 
 ### Principais
 - `flutter`: SDK principal
-- `shared_preferences`: Persistência local
+- `supabase_flutter`: Backend e sincronização na nuvem
+- `shared_preferences`: Cache local
+- `device_info_plus`: Identificação de dispositivo
+- `provider`: Gerenciamento de estado
+- `get_it`: Service locator (DI)
+- `dartz`: Programação funcional (Either)
+- `equatable`: Comparação de objetos
 
 ### Dev Dependencies
 - `flutter_lints`: Análise estática
-- `flutter_test`: Testes
+- `flutter_test`: Testes unitários
+- `mockito`: Mocks para testes
+- `build_runner`: Geração de código
 
 ## 🎨 UI/UX Guidelines
 
 ### Cores
-- **Primary**: Amber (`Colors.amber`)
-- **Accent**: Green (`Colors.green`)
-- **Background**: Gradiente amber
+- **Primary**: Green (`Colors.green`)
+- **Accent**: Blue (`Colors.blue`)
+- **Background**: Gradiente verde (green.shade400 → green.shade50)
 - **Cards**: Branco com elevação
+- **Error**: Orange (`Colors.orange`)
 
 ### Componentes
 - Use Material Design 3
@@ -75,10 +86,17 @@ Fornecer uma experiência divertida e simples de piadas, com um sistema intelige
 
 ## 💾 Persistência
 
-### SharedPreferences
+### Supabase (Remoto)
+- Tabela: `jokes`
+- Sincronização automática
+- CRUD completo para admins autorizados
+- Campos: `id`, `question`, `answer`, `view_count`, `is_active`, `created_at`, `updated_at`
+
+### SharedPreferences (Cache Local)
 - Chave principal: `'jokes'`
 - Formato: JSON serializado
 - Modelo: `List<Joke>` com contadores
+- Sincronização com remoto no carregamento
 
 ### Estrutura de Dados
 ```dart
@@ -118,11 +136,19 @@ flutter build appbundle --release
 
 ## 🔒 Segurança
 
+### Autorização por Dispositivo
+- **DeviceUtils**: Gerencia whitelist de dispositivos autorizados
+- **allowedDeviceIds**: Lista de IDs Android permitidos para admin
+- **Funções admin**: Criar, editar e deletar piadas
+- **Menu oculto**: Drawer só aparece para dispositivos autorizados
+- **Verificação em camadas**: Menu → Tela → Ação
+
 ### Arquivos Sensíveis (NÃO COMMITAR)
 - `android/key.properties`
 - `android/app/*.jks`
 - `android/app/*.keystore`
 - `android/local.properties`
+- `.env` (credenciais Supabase)
 
 ### Verificar antes de commit
 ```bash
@@ -223,5 +249,5 @@ Quando adicionar features complexas, considere:
 
 ---
 
-**Última atualização**: 2025-11-15
-**Versão do app**: 5.0.0 (Build 14)
+**Última atualização**: 2025-11-28
+**Versão do app**: 5.2.0 (Build 26)

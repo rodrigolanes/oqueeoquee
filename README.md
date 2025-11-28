@@ -1,8 +1,9 @@
 # O que é o que é? 🤔😄
 
-[![Flutter](https://img.shields.io/badge/Flutter-5.0.0-02569B?logo=flutter)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-5.2.0-02569B?logo=flutter)](https://flutter.dev)
 [![Platform](https://img.shields.io/badge/Platform-Android-green.svg)](https://www.android.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Build](https://img.shields.io/badge/Build-26-brightgreen.svg)]()
 
 Aplicação Flutter de piadas "O que é o que é?" com sistema inteligente de contadores para garantir que você veja todas as piadas antes de repetir!
 
@@ -12,14 +13,17 @@ Aplicação Flutter de piadas "O que é o que é?" com sistema inteligente de co
 
 ### ✨ Funcionalidades
 
-- 🎭 **20 piadas clássicas** de "O que é o que é?"
+- 🎭 **Piadas na nuvem** - sincronização automática com Supabase
 - 🎯 **Sistema inteligente de contadores** - nunca repete uma piada não vista
-- 💾 **Persistência de dados** - mantém seu progresso entre sessões
+- 💾 **Persistência híbrida** - cache local + sincronização remota
 - 📊 **Barra de progresso** - veja quantas piadas já foram vistas
-- 🎨 **Interface moderna** - design limpo e intuitivo com Material Design
+- 🎨 **Interface moderna** - design verde limpo e intuitivo com Material Design 3
 - ✨ **Animações suaves** - transições fluidas entre piadas
 - 🔄 **Reset de contadores** - comece do zero quando quiser
 - 📱 **Responsivo** - funciona em diferentes tamanhos de tela
+- 🔒 **Sistema de autorização** - controle de acesso por dispositivo para funções admin
+- ➕ **CRUD completo** - criar, editar e deletar piadas (apenas admins)
+- 🐛 **Tela de debug** - acessível via 3 toques no título
 
 ### 🎮 Como Funciona
 
@@ -34,24 +38,51 @@ Aplicação Flutter de piadas "O que é o que é?" com sistema inteligente de co
 
 ## 🛠️ Tecnologias
 
-- **Flutter 3.35.6** - Framework multiplataforma
-- **Dart 3.9.2** - Linguagem de programação
-- **SharedPreferences** - Persistência local de dados
+- **Flutter 3.x** - Framework multiplataforma
+- **Dart 3.x** - Linguagem de programação
+- **Supabase** - Backend as a Service (PostgreSQL)
+- **Provider** - Gerenciamento de estado
+- **GetIt** - Service Locator (Dependency Injection)
+- **Dartz** - Programação funcional (Either monad)
+- **SharedPreferences** - Cache local
+- **Device Info Plus** - Identificação de dispositivo
 - **Material Design 3** - Design moderno e responsivo
+- **Clean Architecture** - Separação em camadas (Domain/Data/Presentation)
 
 ## 📦 Estrutura do Projeto
 
 ```
 lib/
-├── main.dart                    # Ponto de entrada
-├── models/
-│   └── joke.dart               # Modelo de dados da piada
-├── data/
-│   └── jokes_data.dart         # Lista de 20 piadas fixas
-├── controllers/
-│   └── joke_controller.dart    # Lógica de negócio e persistência
-└── screens/
-    └── home_screen.dart        # Tela principal
+├── main.dart                                    # Ponto de entrada + DI
+├── features/
+│   └── jokes/
+│       ├── domain/
+│       │   ├── entities/
+│       │   │   └── joke.dart                   # Entidade Joke
+│       │   └── repositories/
+│       │       └── joke_repository.dart        # Contrato do repositório
+│       ├── data/
+│       │   ├── models/
+│       │   │   └── joke_model.dart            # Modelo para serialização
+│       │   ├── datasources/
+│       │   │   ├── joke_remote_datasource.dart # Supabase
+│       │   │   └── joke_local_datasource.dart  # SharedPreferences
+│       │   └── repositories/
+│       │       └── joke_repository_impl.dart   # Implementação
+│       └── presentation/
+│           ├── providers/
+│           │   ├── joke_provider.dart          # Estado de piadas
+│           │   └── admin_provider.dart         # Estado admin
+│           └── screens/
+│               ├── home_screen.dart            # Tela principal
+│               ├── create_joke_screen.dart     # Criar piada
+│               ├── edit_joke_screen.dart       # Editar piada
+│               └── debug_screen.dart           # Debug
+├── utils/
+│   └── device_utils.dart                       # Autorização por dispositivo
+└── core/
+    └── error/
+        └── failures.dart                       # Tratamento de erros
 ```
 
 ## 🚀 Como Executar
@@ -107,13 +138,17 @@ flutter build appbundle --release
 
 ## 📝 Versão Atual
 
-**Versão 5.0.0 (Build 14)**
+**Versão 5.2.0 (Build 26)**
 
 Esta é uma renovação completa da aplicação original, trazendo:
-- Código modernizado para Flutter 3.x
-- Nova interface com Material Design 3
+- Código modernizado para Flutter 3.x com Clean Architecture
+- Backend Supabase com sincronização na nuvem
+- Sistema de autorização por dispositivo
+- Nova interface verde com Material Design 3
 - Melhorias na experiência do usuário
 - Performance otimizada
+- CRUD completo de piadas (apenas admins)
+- 105 testes unitários
 
 Veja o [histórico completo de releases](RELEASES.md).
 
@@ -121,17 +156,28 @@ Veja o [histórico completo de releases](RELEASES.md).
 
 ### Arquitetura
 
-O app utiliza uma arquitetura simples e eficiente:
-- **Model**: Representação dos dados (Joke)
-- **Controller**: Lógica de negócio (JokeController)
-- **View**: Interface do usuário (HomeScreen)
+O app utiliza **Clean Architecture** com 3 camadas:
+- **Domain**: Entidades puras e contratos (Joke, JokeRepository)
+- **Data**: Implementações e fontes de dados (Supabase + SharedPreferences)
+- **Presentation**: UI e gerenciamento de estado (Provider + Screens)
+
+Princípios SOLID aplicados em todo o código.
 
 ### Persistência
 
-Utiliza `SharedPreferences` para armazenar:
-- Lista completa de piadas
-- Contador de visualizações de cada piada
-- Estado atual da aplicação
+Utiliza arquitetura híbrida:
+
+**Supabase (Remoto)**:
+- Fonte única da verdade
+- Piadas sincronizadas automaticamente
+- CRUD completo para admins
+- PostgreSQL robusto
+
+**SharedPreferences (Cache Local)**:
+- Armazena piadas localmente
+- Contador de visualizações
+- Funciona offline
+- Sincroniza com remoto quando online
 
 ## 📄 Licença
 
