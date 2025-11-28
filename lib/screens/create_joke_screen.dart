@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../controllers/joke_controller.dart';
+import '../features/jokes/presentation/providers/admin_provider.dart';
 
 class CreateJokeScreen extends StatefulWidget {
-  final JokeController controller;
-
-  const CreateJokeScreen({
-    super.key,
-    required this.controller,
-  });
+  const CreateJokeScreen({super.key});
 
   @override
   State<CreateJokeScreen> createState() => _CreateJokeScreenState();
@@ -32,32 +28,31 @@ class _CreateJokeScreenState extends State<CreateJokeScreen> {
 
     setState(() => _isLoading = true);
 
-    try {
-      await widget.controller.createJoke(
-        _questionController.text.trim(),
-        _answerController.text.trim(),
-      );
+    final adminProvider = context.read<AdminProvider>();
+    final success = await adminProvider.createJoke(
+      question: _questionController.text.trim(),
+      answer: _answerController.text.trim(),
+    );
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Piada criada com sucesso!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.of(context).pop(true);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erro ao criar piada: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+    setState(() => _isLoading = false);
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Piada criada com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.of(context).pop(true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao criar piada: ${adminProvider.errorMessage}'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 

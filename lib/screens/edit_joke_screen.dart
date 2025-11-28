@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../controllers/joke_controller.dart';
-import '../models/joke.dart';
+import '../features/jokes/domain/entities/joke.dart';
+import '../features/jokes/presentation/providers/admin_provider.dart';
 
 class EditJokeScreen extends StatefulWidget {
   final Joke joke;
-  final JokeController controller;
 
   const EditJokeScreen({
     super.key,
     required this.joke,
-    required this.controller,
   });
 
   @override
@@ -42,33 +41,32 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
 
     setState(() => _isLoading = true);
 
-    try {
-      await widget.controller.updateJoke(
-        widget.joke.id,
-        _questionController.text.trim(),
-        _answerController.text.trim(),
-      );
+    final adminProvider = context.read<AdminProvider>();
+    final success = await adminProvider.updateJoke(
+      id: widget.joke.id,
+      question: _questionController.text.trim(),
+      answer: _answerController.text.trim(),
+    );
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Piada atualizada com sucesso!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.of(context).pop(true);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erro ao atualizar: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+    setState(() => _isLoading = false);
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Piada atualizada com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.of(context).pop(true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao atualizar: ${adminProvider.errorMessage}'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -98,29 +96,28 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
 
     setState(() => _isLoading = true);
 
-    try {
-      await widget.controller.deleteJoke(widget.joke.id);
+    final adminProvider = context.read<AdminProvider>();
+    final success = await adminProvider.deleteJoke(widget.joke.id);
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Piada deletada com sucesso!'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-        Navigator.of(context).pop(true);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erro ao deletar: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
+    setState(() => _isLoading = false);
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Piada deletada com sucesso!'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      Navigator.of(context).pop(true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao deletar: ${adminProvider.errorMessage}'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
