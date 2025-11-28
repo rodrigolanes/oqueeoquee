@@ -77,12 +77,12 @@ void main() {
 
       // act
       final future = provider.loadNextJoke();
-      
+
       // assert - durante
       expect(provider.isLoading, true);
-      
+
       await future;
-      
+
       // assert - depois
       expect(provider.isLoading, false);
     });
@@ -90,8 +90,9 @@ void main() {
     test('deve limpar answerRevealed ao carregar nova piada', () async {
       // arrange
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
-      when(mockIncrementViewCount(any)).thenAnswer((_) async => const Right(null));
-      
+      when(mockIncrementViewCount(any))
+          .thenAnswer((_) async => const Right(null));
+
       // Revela resposta da primeira piada
       await provider.loadNextJoke();
       provider.revealAnswer();
@@ -137,7 +138,8 @@ void main() {
     test('deve revelar resposta quando há piada', () async {
       // arrange
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
-      when(mockIncrementViewCount(any)).thenAnswer((_) async => const Right(null));
+      when(mockIncrementViewCount(any))
+          .thenAnswer((_) async => const Right(null));
       await provider.loadNextJoke();
 
       // act
@@ -150,12 +152,13 @@ void main() {
     test('deve incrementar viewCount ao revelar', () async {
       // arrange
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
-      when(mockIncrementViewCount(any)).thenAnswer((_) async => const Right(null));
+      when(mockIncrementViewCount(any))
+          .thenAnswer((_) async => const Right(null));
       await provider.loadNextJoke();
 
       // act
       provider.revealAnswer();
-      
+
       // Aguarda processamento assíncrono
       await Future.delayed(const Duration(milliseconds: 10));
 
@@ -175,7 +178,8 @@ void main() {
     test('não deve incrementar contador novamente se já revelado', () async {
       // arrange
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
-      when(mockIncrementViewCount(any)).thenAnswer((_) async => const Right(null));
+      when(mockIncrementViewCount(any))
+          .thenAnswer((_) async => const Right(null));
       await provider.loadNextJoke();
 
       // act
@@ -190,9 +194,10 @@ void main() {
     test('deve notificar listeners', () async {
       // arrange
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
-      when(mockIncrementViewCount(any)).thenAnswer((_) async => const Right(null));
+      when(mockIncrementViewCount(any))
+          .thenAnswer((_) async => const Right(null));
       await provider.loadNextJoke();
-      
+
       int notifyCount = 0;
       provider.addListener(() => notifyCount++);
 
@@ -207,12 +212,13 @@ void main() {
   group('resetCounters', () {
     test('deve resetar contadores e recarregar piada', () async {
       // arrange
-      when(mockResetViewCounters(any)).thenAnswer((_) async => const Right(null));
+      when(mockResetViewCounters(any))
+          .thenAnswer((_) async => const Right(null));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
 
       // act
       await provider.resetCounters();
-      
+
       // Aguarda o loadNextJoke completar
       await Future.delayed(const Duration(milliseconds: 10));
 
@@ -259,7 +265,7 @@ void main() {
         (_) async => const Left(CacheFailure('Erro')),
       );
       await provider.loadNextJoke();
-      
+
       int notifyCount = 0;
       provider.addListener(() => notifyCount++);
 
@@ -275,7 +281,8 @@ void main() {
     test('deve resetar todo o estado', () async {
       // arrange
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
-      when(mockIncrementViewCount(any)).thenAnswer((_) async => const Right(null));
+      when(mockIncrementViewCount(any))
+          .thenAnswer((_) async => const Right(null));
       await provider.loadNextJoke();
       provider.revealAnswer();
 

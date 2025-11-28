@@ -61,7 +61,7 @@ class JokeProvider extends ChangeNotifier {
     if (_currentJoke != null && !_answerRevealed) {
       _answerRevealed = true;
       notifyListeners();
-      
+
       // Incrementa contador de visualização
       _incrementCurrentJokeViewCount();
     }

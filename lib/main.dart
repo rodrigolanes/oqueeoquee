@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'controllers/joke_controller.dart';
+import 'injection_container.dart' as di;
+import 'features/jokes/presentation/providers/joke_provider.dart';
+import 'features/jokes/presentation/providers/admin_provider.dart';
 import 'screens/home_screen.dart';
-import 'services/supabase_service.dart';
 import 'config/supabase_config.dart';
 
 void main() async {
@@ -11,8 +13,6 @@ void main() async {
   try {
     // Credenciais devem estar em supabase_config.dart (não commitado)
     debugPrint('🔧 Inicializando Supabase...');
-    debugPrint('URL: ${SupabaseConfig.url}');
-    debugPrint('Key: ${SupabaseConfig.anonKey.substring(0, 10)}...');
 
     await Supabase.initialize(
       url: SupabaseConfig.url,
@@ -26,8 +26,13 @@ void main() async {
     );
 
     debugPrint('✅ Supabase inicializado com sucesso!');
+
+    // Inicializa injeção de dependências
+    debugPrint('🔧 Inicializando Dependency Injection...');
+    await di.initializeDependencies();
+    debugPrint('✅ Dependency Injection inicializado!');
   } catch (e) {
-    debugPrint('❌ Erro ao inicializar Supabase: $e');
+    debugPrint('❌ Erro ao inicializar app: $e');
     // Continue mesmo com erro para mostrar mensagem ao usuário
   }
 
@@ -39,17 +44,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'O que é o que é?',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
-        useMaterial3: true,
-      ),
-      home: HomeScreen(
-        controller: JokeController(
-          supabaseService: SupabaseService(Supabase.instance.client),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => di.sl<JokeProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<AdminProvider>()),
+      ],
+      child: MaterialApp(
+        title: 'O que é o que é?',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
+          useMaterial3: true,
         ),
+        home: const HomeScreen(),
       ),
     );
   }
