@@ -48,11 +48,8 @@ class JokeRemoteDataSourceImpl implements JokeRemoteDataSource {
         'updated_at': now.toIso8601String(),
       };
 
-      final response = await supabaseClient
-          .from('jokes')
-          .insert(data)
-          .select()
-          .single();
+      final response =
+          await supabaseClient.from('jokes').insert(data).select().single();
 
       return JokeModel.fromJson(response);
     } on PostgrestException catch (e) {
