@@ -8,9 +8,28 @@ import 'config/supabase_config.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Credenciais devem estar em supabase_config.dart (não commitado)
-  await Supabase.initialize(
-      url: SupabaseConfig.url, anonKey: SupabaseConfig.anonKey);
+  try {
+    // Credenciais devem estar em supabase_config.dart (não commitado)
+    debugPrint('🔧 Inicializando Supabase...');
+    debugPrint('URL: ${SupabaseConfig.url}');
+    debugPrint('Key: ${SupabaseConfig.anonKey.substring(0, 10)}...');
+    
+    await Supabase.initialize(
+      url: SupabaseConfig.url,
+      anonKey: SupabaseConfig.anonKey,
+    ).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        debugPrint('❌ Timeout ao inicializar Supabase');
+        throw Exception('Timeout na inicialização do Supabase');
+      },
+    );
+    
+    debugPrint('✅ Supabase inicializado com sucesso!');
+  } catch (e) {
+    debugPrint('❌ Erro ao inicializar Supabase: $e');
+    // Continue mesmo com erro para mostrar mensagem ao usuário
+  }
 
   runApp(const MyApp());
 }
