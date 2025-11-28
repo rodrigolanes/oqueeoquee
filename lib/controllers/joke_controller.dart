@@ -11,6 +11,7 @@ class JokeController extends ChangeNotifier {
   List<Joke> _jokes = [];
   Joke? _currentJoke;
   bool _showAnswer = false;
+  bool _isInitializing = true;
   SupabaseService? _supabaseService;
 
   VoidCallback? onAllJokesViewed;
@@ -18,6 +19,7 @@ class JokeController extends ChangeNotifier {
   List<Joke> get jokes => _jokes;
   Joke? get currentJoke => _currentJoke;
   bool get showAnswer => _showAnswer;
+  bool get isInitializing => _isInitializing;
 
   JokeController({SupabaseService? supabaseService}) {
     _supabaseService = supabaseService;
@@ -46,10 +48,10 @@ class JokeController extends ChangeNotifier {
       _selectNextJoke();
       debugPrint(
           '✅ Inicialização completa! Piada atual: ${_currentJoke?.question}');
-      notifyListeners();
     } catch (e) {
       debugPrint('❌ Erro na inicialização: $e');
-      // Notifica mesmo com erro para desbloquear a UI
+    } finally {
+      _isInitializing = false;
       notifyListeners();
     }
   }

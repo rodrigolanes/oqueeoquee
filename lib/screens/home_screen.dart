@@ -102,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen>
     final showAnswer = widget.controller.showAnswer;
     final viewedJokes = widget.controller.viewedJokes;
     final totalJokes = widget.controller.totalJokes;
+    final isInitializing = widget.controller.isInitializing;
 
     return Scaffold(
       appBar: AppBar(
@@ -151,7 +152,8 @@ class _HomeScreenState extends State<HomeScreen>
                 children: [
                   const CircularProgressIndicator(),
                   const SizedBox(height: 24),
-                  if (totalJokes == 0) ...[
+                  // Só mostra erro se terminou de inicializar E não tem piadas
+                  if (!isInitializing && totalJokes == 0) ...[
                     const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.all(24.0),
