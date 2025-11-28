@@ -13,7 +13,7 @@ void main() async {
     debugPrint('🔧 Inicializando Supabase...');
     debugPrint('URL: ${SupabaseConfig.url}');
     debugPrint('Key: ${SupabaseConfig.anonKey.substring(0, 10)}...');
-    
+
     await Supabase.initialize(
       url: SupabaseConfig.url,
       anonKey: SupabaseConfig.anonKey,
@@ -24,7 +24,7 @@ void main() async {
         throw Exception('Timeout na inicialização do Supabase');
       },
     );
-    
+
     debugPrint('✅ Supabase inicializado com sucesso!');
   } catch (e) {
     debugPrint('❌ Erro ao inicializar Supabase: $e');

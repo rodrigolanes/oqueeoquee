@@ -27,23 +27,25 @@ class JokeController extends ChangeNotifier {
   Future<void> _initialize() async {
     try {
       debugPrint('🚀 Iniciando JokeController...');
-      
+
       // Executar migrações do banco antes de carregar
       await DatabaseMigration.migrate();
       debugPrint('✅ Migrações concluídas');
 
       await _loadJokes();
       debugPrint('✅ Piadas locais carregadas: ${_jokes.length}');
-      
+
       await _syncWithSupabase().timeout(
         const Duration(seconds: 15),
         onTimeout: () {
-          debugPrint('⏰ Timeout na sincronização - continuando com dados locais');
+          debugPrint(
+              '⏰ Timeout na sincronização - continuando com dados locais');
         },
       );
-      
+
       _selectNextJoke();
-      debugPrint('✅ Inicialização completa! Piada atual: ${_currentJoke?.question}');
+      debugPrint(
+          '✅ Inicialização completa! Piada atual: ${_currentJoke?.question}');
       notifyListeners();
     } catch (e) {
       debugPrint('❌ Erro na inicialização: $e');
@@ -60,7 +62,7 @@ class JokeController extends ChangeNotifier {
 
     try {
       debugPrint('🔄 Iniciando sincronização com Supabase...');
-      
+
       final remoteJokes = await _supabaseService!.fetchJokes().timeout(
         const Duration(seconds: 10),
         onTimeout: () {
@@ -68,7 +70,7 @@ class JokeController extends ChangeNotifier {
           return <Joke>[]; // Retorna lista vazia em caso de timeout
         },
       );
-      
+
       debugPrint('📥 Recebidas ${remoteJokes.length} piadas do Supabase');
 
       if (remoteJokes.isEmpty) {
