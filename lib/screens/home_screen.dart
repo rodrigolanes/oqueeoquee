@@ -22,30 +22,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   int _titleTapCount = 0;
   DateTime? _lastTitleTap;
-
-  void _showUnauthorizedDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(Icons.lock, color: Colors.red),
-            SizedBox(width: 8),
-            Text('Acesso Negado'),
-          ],
-        ),
-        content: const Text(
-          'Este dispositivo não tem permissão para administrar piadas.\n\nApenas dispositivos autorizados podem criar ou editar piadas.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Entendi'),
-          ),
-        ],
-      ),
-    );
-  }
+  bool _isAdmin = false;
 
   @override
   void initState() {
@@ -57,13 +34,27 @@ class _HomeScreenState extends State<HomeScreen>
     _fadeAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
 
+    // Verifica se é admin
+    _checkAdminStatus();
+
     // Carrega primeira piada
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<JokeProvider>().loadNextJoke();
     });
   }
 
+  Future<void> _checkAdminStatus() async {
+    final isAllowed = await DeviceUtils.isDeviceAllowed();
+    if (mounted) {
+      setState(() {
+        _isAdmin = isAllowed;
+      });
+    }
+  }
+
   void _onTitleTap() {
+    if (!_isAdmin) return;
+
     final now = DateTime.now();
 
     // Reseta contador se passou mais de 2 segundos desde o último toque
@@ -104,109 +95,95 @@ class _HomeScreenState extends State<HomeScreen>
         }
 
         return Scaffold(
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Colors.amber, Colors.amber.shade300],
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
+          drawer: _isAdmin
+              ? Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
                     children: [
-                      const Text(
-                        '🤔',
-                        style: TextStyle(fontSize: 48),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'O que é o que é?',
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                      DrawerHeader(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Colors.amber, Colors.amber.shade300],
+                          ),
                         ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Text(
+                              '🤔',
+                              style: TextStyle(fontSize: 48),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'O que é o que é?',
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ListTile(
+                        leading:
+                            const Icon(Icons.add_circle, color: Colors.green),
+                        title: const Text('Criar Nova Piada'),
+                        onTap: () async {
+                          Navigator.pop(context);
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CreateJokeScreen(),
+                            ),
+                          );
+                          if (result == true && mounted) {
+                            jokeProvider.loadNextJoke();
+                          }
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.edit, color: Colors.blue),
+                        title: const Text('Editar Piada Atual'),
+                        enabled: joke != null,
+                        onTap: joke == null
+                            ? null
+                            : () async {
+                                Navigator.pop(context);
+                                final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditJokeScreen(joke: joke),
+                                  ),
+                                );
+                                if (result == true && mounted) {
+                                  jokeProvider.loadNextJoke();
+                                }
+                              },
+                      ),
+                      const Divider(),
+                      ListTile(
+                        leading:
+                            const Icon(Icons.bug_report, color: Colors.orange),
+                        title: const Text('Debug'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DebugScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.add_circle, color: Colors.green),
-                  title: const Text('Criar Nova Piada'),
-                  onTap: () async {
-                    Navigator.pop(context);
-
-                    final isAllowed = await DeviceUtils.isDeviceAllowed();
-                    if (!isAllowed && mounted) {
-                      _showUnauthorizedDialog(context);
-                      return;
-                    }
-
-                    if (mounted) {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CreateJokeScreen(),
-                        ),
-                      );
-                      if (result == true && mounted) {
-                        jokeProvider.loadNextJoke();
-                      }
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.edit, color: Colors.blue),
-                  title: const Text('Editar Piada Atual'),
-                  enabled: joke != null,
-                  onTap: joke == null
-                      ? null
-                      : () async {
-                          Navigator.pop(context);
-
-                          final isAllowed = await DeviceUtils.isDeviceAllowed();
-                          if (!isAllowed && mounted) {
-                            _showUnauthorizedDialog(context);
-                            return;
-                          }
-
-                          if (mounted) {
-                            final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    EditJokeScreen(joke: joke),
-                              ),
-                            );
-                            if (result == true && mounted) {
-                              jokeProvider.loadNextJoke();
-                            }
-                          }
-                        },
-                ),
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.bug_report, color: Colors.orange),
-                  title: const Text('Debug'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DebugScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
+                )
+              : null,
           appBar: AppBar(
             title: GestureDetector(
               onTap: _onTitleTap,
