@@ -53,8 +53,6 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _onTitleTap() {
-    if (!_isAdmin) return;
-
     final now = DateTime.now();
 
     // Reseta contador se passou mais de 2 segundos desde o último toque
