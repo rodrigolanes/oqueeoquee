@@ -1,7 +1,7 @@
 /// Exceção lançada quando há erro no servidor/API
 class ServerException implements Exception {
   final String message;
-  
+
   const ServerException(this.message);
 
   @override
@@ -11,7 +11,7 @@ class ServerException implements Exception {
 /// Exceção lançada quando há erro no cache local
 class CacheException implements Exception {
   final String message;
-  
+
   const CacheException(this.message);
 
   @override
@@ -21,7 +21,7 @@ class CacheException implements Exception {
 /// Exceção lançada quando há erro de rede
 class NetworkException implements Exception {
   final String message;
-  
+
   const NetworkException(this.message);
 
   @override
@@ -31,7 +31,7 @@ class NetworkException implements Exception {
 /// Exceção lançada quando há erro de validação
 class ValidationException implements Exception {
   final String message;
-  
+
   const ValidationException(this.message);
 
   @override
