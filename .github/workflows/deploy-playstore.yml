@@ -38,6 +38,30 @@ jobs:
           static const String anonKey = '${{ secrets.SUPABASE_ANON_KEY }}';
         }
         EOF
+    
+    - name: Verificar supabase_config.dart criado
+      run: |
+        echo "Verificando arquivo supabase_config.dart..."
+        if [ ! -f lib/config/supabase_config.dart ]; then
+          echo "❌ ERRO: Arquivo não foi criado!"
+          exit 1
+        fi
+        echo "✅ Arquivo criado. Conteúdo (secrets mascaradas):"
+        cat lib/config/supabase_config.dart | sed 's/\(url = \).*/\1"[MASKED]"/g' | sed 's/\(anonKey = \).*/\1"[MASKED]"/g'
+        
+        # Verifica se URL não está vazia
+        if grep -q "url = '';" lib/config/supabase_config.dart; then
+          echo "❌ ERRO: SUPABASE_URL está vazia! Configure a secret no GitHub."
+          exit 1
+        fi
+        
+        # Verifica se anonKey não está vazia
+        if grep -q "anonKey = '';" lib/config/supabase_config.dart; then
+          echo "❌ ERRO: SUPABASE_ANON_KEY está vazia! Configure a secret no GitHub."
+          exit 1
+        fi
+        
+        echo "✅ Secrets do Supabase configuradas corretamente!"
       
     - name: Decode Keystore
       run: |

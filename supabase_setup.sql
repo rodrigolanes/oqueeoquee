@@ -18,10 +18,33 @@ CREATE INDEX IF NOT EXISTS idx_jokes_view_count ON jokes(view_count);
 CREATE INDEX IF NOT EXISTS idx_jokes_deleted ON jokes(deleted);
 CREATE INDEX IF NOT EXISTS idx_jokes_updated_at ON jokes(updated_at DESC);
 
--- 3. Desabilitar Row Level Security (RLS) - Acesso público total
-ALTER TABLE jokes DISABLE ROW LEVEL SECURITY;
+-- 3. Habilitar Row Level Security (RLS)
+ALTER TABLE jokes ENABLE ROW LEVEL SECURITY;
 
--- 4. Inserir piadas iniciais
+-- 4. Criar políticas de acesso público para CRUD completo
+
+-- Política de SELECT (leitura) - todos podem ler
+CREATE POLICY "Permitir leitura pública"
+ON jokes FOR SELECT
+USING (true);
+
+-- Política de INSERT (criação) - todos podem criar
+CREATE POLICY "Permitir inserção pública"
+ON jokes FOR INSERT
+WITH CHECK (true);
+
+-- Política de UPDATE (atualização) - todos podem atualizar
+CREATE POLICY "Permitir atualização pública"
+ON jokes FOR UPDATE
+USING (true)
+WITH CHECK (true);
+
+-- Política de DELETE (exclusão) - todos podem deletar
+CREATE POLICY "Permitir exclusão pública"
+ON jokes FOR DELETE
+USING (true);
+
+-- 5. Inserir piadas iniciais
 INSERT INTO jokes (id, question, answer, view_count, deleted, created_at, updated_at) VALUES
   (1, 'Tem coroa, mas não é rei, tem escama, mas não é peixe?', 'O abacaxi', 0, false, NOW(), NOW()),
   (2, 'Cai em pé e corre deitado?', 'A chuva', 0, false, NOW(), NOW()),
@@ -45,5 +68,5 @@ INSERT INTO jokes (id, question, answer, view_count, deleted, created_at, update
   (20, 'Tem chapéu mas não tem cabeça, tem boca mas não fala?', 'O cogumelo', 0, false, NOW(), NOW())
 ON CONFLICT (id) DO NOTHING;
 
--- 5. Verificar inserção
+-- 6. Verificar inserção
 SELECT COUNT(*) as total_piadas FROM jokes WHERE deleted = false;

@@ -128,6 +128,13 @@ class JokeController extends ChangeNotifier {
   }
 
   void _selectNextJoke() {
+    // Se não há piadas, não faz nada
+    if (_jokes.isEmpty) {
+      _currentJoke = null;
+      debugPrint('Nenhuma piada disponível');
+      return;
+    }
+
     // Encontra o menor contador
     int minCount =
         _jokes.map((j) => j.viewCount).reduce((a, b) => a < b ? a : b);

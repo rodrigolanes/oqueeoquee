@@ -145,7 +145,65 @@ class _HomeScreenState extends State<HomeScreen>
         ],
       ),
       body: joke == null
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 24),
+                  if (totalJokes == 0) ...[
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Card(
+                        color: Colors.orange.shade50,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Icon(Icons.cloud_off,
+                                  size: 48, color: Colors.orange.shade700),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Não foi possível carregar as piadas',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.orange.shade900,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Verifique sua conexão com a internet e tente novamente.',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.orange.shade700,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  // Força recarregar
+                                  widget.controller.resetCounters();
+                                },
+                                icon: const Icon(Icons.refresh),
+                                label: const Text('Tentar Novamente'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  foregroundColor: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            )
           : Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
