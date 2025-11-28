@@ -2,6 +2,35 @@
 
 ## 📋 Versões
 
+### [5.2.0] - 2025-11-28 (Build 26)
+#### 🔒 Segurança e Nova Identidade Visual
+
+**Controle de acesso e design renovado**
+
+#### ✨ Novidades
+- Sistema de autorização baseado em dispositivo para funções administrativas
+- Apenas dispositivos autorizados podem criar/editar piadas
+- Menu administrativo oculto para usuários não autorizados
+- Nova paleta de cores verde (substituindo amarelo)
+
+#### 🛠️ Melhorias
+- Interface mais agradável com tons de verde
+- AppBar com visual modernizado
+- Gradiente verde suave no background
+- Tela de debug acessível a todos via 3 toques no título
+
+#### 🔒 Segurança
+- DeviceUtils com whitelist de dispositivos autorizados
+- Verificação de permissão em múltiplas camadas (menu, tela, ação)
+- Proteção contra acesso não autorizado às funcionalidades CRUD
+
+#### 📱 UX
+- Menu drawer visível apenas para administradores
+- Feedback claro sobre restrições de acesso
+- Design mais harmonioso e agradável aos olhos
+
+---
+
 ### [5.1.1] - 2025-11-27 (Build 22)
 #### 🔧 Correções e Melhorias
 
