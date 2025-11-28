@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen>
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [Colors.amber, Colors.amber.shade300],
+                            colors: [Colors.green, Colors.green.shade300],
                           ),
                         ),
                         child: Column(
@@ -188,8 +188,8 @@ class _HomeScreenState extends State<HomeScreen>
               child: const Text('O que é o que é? 🤔'),
             ),
             centerTitle: true,
-            backgroundColor: Colors.amber,
-            foregroundColor: Colors.black87,
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
             elevation: 0,
             systemOverlayStyle: SystemUiOverlayStyle.dark,
             actions: [
@@ -293,8 +293,8 @@ class _HomeScreenState extends State<HomeScreen>
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.amber,
-                        Colors.amber.shade100,
+                        Colors.green.shade400,
+                        Colors.green.shade50,
                       ],
                     ),
                   ),
