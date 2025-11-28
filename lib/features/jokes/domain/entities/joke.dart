@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 /// Entidade de domínio que representa uma piada
-/// 
+///
 /// Esta é uma classe pura de domínio, sem dependências do Flutter
 /// ou de detalhes de implementação (JSON, banco de dados, etc)
 class Joke extends Equatable {

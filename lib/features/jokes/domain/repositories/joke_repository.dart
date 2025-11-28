@@ -3,7 +3,7 @@ import '../../../../core/error/failures.dart';
 import '../entities/joke.dart';
 
 /// Interface abstrata do repositório de piadas
-/// 
+///
 /// Define o contrato para acesso aos dados de piadas,
 /// sem se preocupar com a implementação (local ou remota)
 abstract class JokeRepository {

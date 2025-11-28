@@ -123,8 +123,14 @@ void main() {
         final after = DateTime.now();
 
         // assert
-        expect(updated.updatedAt.isAfter(before) || updated.updatedAt.isAtSameMomentAs(before), true);
-        expect(updated.updatedAt.isBefore(after) || updated.updatedAt.isAtSameMomentAs(after), true);
+        expect(
+            updated.updatedAt.isAfter(before) ||
+                updated.updatedAt.isAtSameMomentAs(before),
+            true);
+        expect(
+            updated.updatedAt.isBefore(after) ||
+                updated.updatedAt.isAtSameMomentAs(after),
+            true);
       });
     });
   });
