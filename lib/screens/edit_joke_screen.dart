@@ -96,23 +96,28 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
 
     setState(() => _isLoading = true);
 
+    if (!mounted) return;
+
     final adminProvider = context.read<AdminProvider>();
     final success = await adminProvider.deleteJoke(widget.joke.id);
 
-    setState(() => _isLoading = false);
-
     if (!mounted) return;
 
+    setState(() => _isLoading = false);
+
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
     if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(
           content: Text('Piada deletada com sucesso!'),
           backgroundColor: Colors.orange,
         ),
       );
-      Navigator.of(context).pop(true);
+      navigator.pop(true);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text('Erro ao deletar: ${adminProvider.errorMessage}'),
           backgroundColor: Colors.red,

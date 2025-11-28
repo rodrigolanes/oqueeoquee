@@ -1,9 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:oqueeoquee/core/error/failures.dart';
-import 'package:oqueeoquee/features/jokes/domain/repositories/joke_repository.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/increment_view_count.dart';
 
 import 'get_next_joke_test.mocks.dart';

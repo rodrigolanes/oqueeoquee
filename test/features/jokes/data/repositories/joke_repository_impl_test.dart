@@ -87,7 +87,7 @@ void main() {
       final result = await repository.getJokes();
 
       // assert
-      expect(result, const Left(CacheFailure('Erro no cache')));
+      expect(result, Left(const CacheFailure('Erro no cache')));
     });
 
     test('deve retornar ServerFailure quando remoto falhar', () async {
@@ -100,7 +100,7 @@ void main() {
       final result = await repository.getJokes();
 
       // assert
-      expect(result, const Left(ServerFailure('Erro no servidor')));
+      expect(result, Left(const ServerFailure('Erro no servidor')));
     });
   });
 
@@ -226,7 +226,7 @@ void main() {
       final result = await repository.incrementViewCount(1);
 
       // assert
-      expect(result, const Left(CacheFailure('Erro')));
+      expect(result, Left(const CacheFailure('Erro')));
     });
   });
 
@@ -285,7 +285,7 @@ void main() {
       when(mockRemoteDataSource.createJoke(
         question: anyNamed('question'),
         answer: anyNamed('answer'),
-      )).thenThrow(ValidationException('Inválido'));
+      )).thenThrow(const ValidationException('Inválido'));
 
       // act
       final result = await repository.createJoke(
@@ -294,7 +294,7 @@ void main() {
       );
 
       // assert
-      expect(result, const Left(ValidationFailure('Inválido')));
+      expect(result, Left(const ValidationFailure('Inválido')));
     });
   });
 
@@ -371,13 +371,14 @@ void main() {
 
     test('deve retornar ServerFailure quando remoto falhar', () async {
       // arrange
-      when(mockRemoteDataSource.getJokes()).thenThrow(ServerException('Erro'));
+      when(mockRemoteDataSource.getJokes())
+          .thenThrow(const ServerException('Erro'));
 
       // act
       final result = await repository.syncWithRemote();
 
       // assert
-      expect(result, const Left(ServerFailure('Erro')));
+      expect(result, Left(const ServerFailure('Erro')));
     });
   });
 }

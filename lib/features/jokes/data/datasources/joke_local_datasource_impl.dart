@@ -4,7 +4,7 @@ import '../../../../core/error/exceptions.dart';
 import '../datasources/joke_local_datasource.dart';
 import '../models/joke_model.dart';
 
-const CACHED_JOKES_KEY = 'CACHED_JOKES';
+const cachedJokesKey = 'CACHED_JOKES';
 
 /// Implementação concreta do JokeLocalDataSource usando SharedPreferences
 class JokeLocalDataSourceImpl implements JokeLocalDataSource {
@@ -15,7 +15,7 @@ class JokeLocalDataSourceImpl implements JokeLocalDataSource {
   @override
   Future<List<JokeModel>> getJokes() async {
     try {
-      final jsonString = sharedPreferences.getString(CACHED_JOKES_KEY);
+      final jsonString = sharedPreferences.getString(cachedJokesKey);
 
       if (jsonString == null || jsonString.isEmpty) {
         return [];
@@ -35,12 +35,12 @@ class JokeLocalDataSourceImpl implements JokeLocalDataSource {
       final jsonString = json.encode(jsonList);
 
       final success = await sharedPreferences.setString(
-        CACHED_JOKES_KEY,
+        cachedJokesKey,
         jsonString,
       );
 
       if (!success) {
-        throw CacheException('Falha ao salvar piadas no cache');
+        throw const CacheException('Falha ao salvar piadas no cache');
       }
     } catch (e) {
       throw CacheException('Erro ao salvar piadas no cache: ${e.toString()}');
@@ -166,10 +166,10 @@ class JokeLocalDataSourceImpl implements JokeLocalDataSource {
   @override
   Future<void> clearCache() async {
     try {
-      final success = await sharedPreferences.remove(CACHED_JOKES_KEY);
+      final success = await sharedPreferences.remove(cachedJokesKey);
 
       if (!success) {
-        throw CacheException('Falha ao limpar cache');
+        throw const CacheException('Falha ao limpar cache');
       }
     } catch (e) {
       throw CacheException('Erro ao limpar cache: ${e.toString()}');

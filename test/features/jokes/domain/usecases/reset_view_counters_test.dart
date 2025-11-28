@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:oqueeoquee/core/error/failures.dart';
 import 'package:oqueeoquee/core/usecases/usecase.dart';
-import 'package:oqueeoquee/features/jokes/domain/repositories/joke_repository.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/reset_view_counters.dart';
 
 import 'get_next_joke_test.mocks.dart';
@@ -24,7 +23,7 @@ void main() {
         .thenAnswer((_) async => const Right(null));
 
     // act
-    final result = await usecase(NoParams());
+    final result = await usecase(const NoParams());
 
     // assert
     expect(result, const Right(null));
@@ -38,7 +37,7 @@ void main() {
         .thenAnswer((_) async => const Left(CacheFailure('Erro')));
 
     // act
-    final result = await usecase(NoParams());
+    final result = await usecase(const NoParams());
 
     // assert
     expect(result, const Left(CacheFailure('Erro')));

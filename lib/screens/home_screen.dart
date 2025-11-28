@@ -92,6 +92,8 @@ class _HomeScreenState extends State<HomeScreen>
                 icon: const Icon(Icons.refresh),
                 tooltip: 'Resetar contadores',
                 onPressed: () async {
+                  final jokeProvider = context.read<JokeProvider>();
+
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -110,8 +112,11 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     ),
                   );
-                  if (confirm == true && mounted) {
-                    context.read<JokeProvider>().resetCounters();
+
+                  if (!mounted) return;
+
+                  if (confirm == true) {
+                    jokeProvider.resetCounters();
                   }
                 },
               ),
@@ -149,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    errorMessage ?? 'Erro desconhecido',
+                                    errorMessage,
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.orange.shade700,

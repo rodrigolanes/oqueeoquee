@@ -114,7 +114,7 @@ void main() {
   group('fromJsonString', () {
     test('deve retornar JokeModel a partir de uma string JSON', () {
       // arrange
-      final jsonString = '''
+      const jsonString = '''
       {
         "id": 1,
         "question": "O que é o que é?",

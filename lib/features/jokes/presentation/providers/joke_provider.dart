@@ -39,7 +39,7 @@ class JokeProvider extends ChangeNotifier {
     _answerRevealed = false;
     notifyListeners();
 
-    final result = await getNextJokeUseCase(NoParams());
+    final result = await getNextJokeUseCase(const NoParams());
 
     result.fold(
       (failure) {
@@ -94,7 +94,7 @@ class JokeProvider extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    final result = await resetViewCountersUseCase(NoParams());
+    final result = await resetViewCountersUseCase(const NoParams());
 
     result.fold(
       (failure) {

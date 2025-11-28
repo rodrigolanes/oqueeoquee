@@ -35,7 +35,8 @@ class JokeRemoteDataSourceImpl implements JokeRemoteDataSource {
   }) async {
     try {
       if (question.trim().isEmpty || answer.trim().isEmpty) {
-        throw ValidationException('Pergunta e resposta não podem estar vazias');
+        throw const ValidationException(
+            'Pergunta e resposta não podem estar vazias');
       }
 
       final now = DateTime.now();
@@ -69,7 +70,8 @@ class JokeRemoteDataSourceImpl implements JokeRemoteDataSource {
   }) async {
     try {
       if (question.trim().isEmpty || answer.trim().isEmpty) {
-        throw ValidationException('Pergunta e resposta não podem estar vazias');
+        throw const ValidationException(
+            'Pergunta e resposta não podem estar vazias');
       }
 
       final data = {

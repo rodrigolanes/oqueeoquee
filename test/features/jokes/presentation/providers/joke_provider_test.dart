@@ -163,7 +163,7 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 10));
 
       // assert
-      verify(mockIncrementViewCount(IncrementViewCountParams(jokeId: 1)));
+      verify(mockIncrementViewCount(const IncrementViewCountParams(jokeId: 1)));
     });
 
     test('não deve fazer nada quando não há piada', () {

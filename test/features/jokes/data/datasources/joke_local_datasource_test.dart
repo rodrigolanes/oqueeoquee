@@ -48,32 +48,32 @@ void main() {
       final jsonString = json.encode(
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
 
       // act
       final result = await dataSource.getJokes();
 
       // assert
-      verify(mockSharedPreferences.getString(CACHED_JOKES_KEY));
+      verify(mockSharedPreferences.getString(cachedJokesKey));
       expect(result, equals(tJokeModels));
     });
 
     test('deve retornar lista vazia quando não há dados no cache', () async {
       // arrange
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY)).thenReturn(null);
+      when(mockSharedPreferences.getString(cachedJokesKey)).thenReturn(null);
 
       // act
       final result = await dataSource.getJokes();
 
       // assert
-      verify(mockSharedPreferences.getString(CACHED_JOKES_KEY));
+      verify(mockSharedPreferences.getString(cachedJokesKey));
       expect(result, isEmpty);
     });
 
     test('deve lançar CacheException quando houver erro ao ler', () async {
       // arrange
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenThrow(Exception('Erro de leitura'));
 
       // act & assert
@@ -110,7 +110,7 @@ void main() {
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
       verify(mockSharedPreferences.setString(
-        CACHED_JOKES_KEY,
+        cachedJokesKey,
         expectedJsonString,
       ));
     });
@@ -146,7 +146,7 @@ void main() {
       final jsonString = json.encode(
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
       when(mockSharedPreferences.setString(any, any))
           .thenAnswer((_) async => true);
@@ -155,8 +155,8 @@ void main() {
       await dataSource.incrementViewCount(1);
 
       // assert
-      verify(mockSharedPreferences.getString(CACHED_JOKES_KEY));
-      verify(mockSharedPreferences.setString(CACHED_JOKES_KEY, any));
+      verify(mockSharedPreferences.getString(cachedJokesKey));
+      verify(mockSharedPreferences.setString(cachedJokesKey, any));
     });
 
     test('deve lançar CacheException quando piada não for encontrada',
@@ -165,7 +165,7 @@ void main() {
       final jsonString = json.encode(
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
 
       // act & assert
@@ -194,7 +194,7 @@ void main() {
       final jsonString = json.encode(
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
       when(mockSharedPreferences.setString(any, any))
           .thenAnswer((_) async => true);
@@ -203,8 +203,8 @@ void main() {
       await dataSource.resetViewCounters();
 
       // assert
-      verify(mockSharedPreferences.getString(CACHED_JOKES_KEY));
-      verify(mockSharedPreferences.setString(CACHED_JOKES_KEY, any));
+      verify(mockSharedPreferences.getString(cachedJokesKey));
+      verify(mockSharedPreferences.setString(cachedJokesKey, any));
     });
   });
 
@@ -225,7 +225,7 @@ void main() {
       final jsonString = json.encode(
         existingJokes.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
       when(mockSharedPreferences.setString(any, any))
           .thenAnswer((_) async => true);
@@ -242,12 +242,12 @@ void main() {
       expect(result.answer, 'Nova resposta');
       expect(result.viewCount, 0);
       expect(result.deleted, false);
-      verify(mockSharedPreferences.setString(CACHED_JOKES_KEY, any));
+      verify(mockSharedPreferences.setString(cachedJokesKey, any));
     });
 
     test('deve criar piada com ID 1 quando cache está vazio', () async {
       // arrange
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY)).thenReturn(null);
+      when(mockSharedPreferences.getString(cachedJokesKey)).thenReturn(null);
       when(mockSharedPreferences.setString(any, any))
           .thenAnswer((_) async => true);
 
@@ -280,7 +280,7 @@ void main() {
       final jsonString = json.encode(
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
       when(mockSharedPreferences.setString(any, any))
           .thenAnswer((_) async => true);
@@ -297,7 +297,7 @@ void main() {
       expect(result.question, 'Pergunta atualizada');
       expect(result.answer, 'Resposta atualizada');
       expect(result.viewCount, 5); // Mantém viewCount
-      verify(mockSharedPreferences.setString(CACHED_JOKES_KEY, any));
+      verify(mockSharedPreferences.setString(cachedJokesKey, any));
     });
 
     test('deve lançar CacheException quando piada não for encontrada',
@@ -306,7 +306,7 @@ void main() {
       final jsonString = json.encode(
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
 
       // act & assert
@@ -339,7 +339,7 @@ void main() {
       final jsonString = json.encode(
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
       when(mockSharedPreferences.setString(any, any))
           .thenAnswer((_) async => true);
@@ -348,8 +348,8 @@ void main() {
       await dataSource.deleteJoke(1);
 
       // assert
-      verify(mockSharedPreferences.getString(CACHED_JOKES_KEY));
-      verify(mockSharedPreferences.setString(CACHED_JOKES_KEY, any));
+      verify(mockSharedPreferences.getString(cachedJokesKey));
+      verify(mockSharedPreferences.setString(cachedJokesKey, any));
     });
 
     test('deve lançar CacheException quando piada não for encontrada',
@@ -358,7 +358,7 @@ void main() {
       final jsonString = json.encode(
         tJokeModels.map((joke) => joke.toJson()).toList(),
       );
-      when(mockSharedPreferences.getString(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.getString(cachedJokesKey))
           .thenReturn(jsonString);
 
       // act & assert
@@ -372,19 +372,19 @@ void main() {
   group('clearCache', () {
     test('deve limpar o cache com sucesso', () async {
       // arrange
-      when(mockSharedPreferences.remove(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.remove(cachedJokesKey))
           .thenAnswer((_) async => true);
 
       // act
       await dataSource.clearCache();
 
       // assert
-      verify(mockSharedPreferences.remove(CACHED_JOKES_KEY));
+      verify(mockSharedPreferences.remove(cachedJokesKey));
     });
 
     test('deve lançar CacheException quando falhar ao limpar', () async {
       // arrange
-      when(mockSharedPreferences.remove(CACHED_JOKES_KEY))
+      when(mockSharedPreferences.remove(cachedJokesKey))
           .thenAnswer((_) async => false);
 
       // act & assert
