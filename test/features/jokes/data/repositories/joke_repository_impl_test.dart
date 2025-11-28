@@ -159,12 +159,15 @@ void main() {
     test('deve retornar CacheFailure quando não houver piadas', () async {
       // arrange
       when(mockLocalDataSource.getJokes()).thenAnswer((_) async => []);
+      when(mockRemoteDataSource.getJokes()).thenAnswer((_) async => []);
+      when(mockLocalDataSource.cacheJokes(any)).thenAnswer((_) async => {});
 
       // act
       final result = await repository.getNextJoke();
 
       // assert
-      expect(result, const Left(CacheFailure('Nenhuma piada disponível')));
+      expect(
+          result, const Left(CacheFailure('Nenhuma piada ativa disponível')));
     });
 
     test('deve ignorar piadas deletadas', () async {

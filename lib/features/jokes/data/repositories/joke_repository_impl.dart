@@ -46,29 +46,37 @@ class JokeRepositoryImpl implements JokeRepository {
   @override
   Future<Either<Failure, Joke>> getNextJoke() async {
     try {
-      final jokes = await localDataSource.getJokes();
+      // Primeiro garante que temos piadas (busca do remoto se cache vazio)
+      final jokesResult = await getJokes();
 
-      if (jokes.isEmpty) {
-        return const Left(CacheFailure('Nenhuma piada disponível'));
-      }
+      return jokesResult.fold(
+        (failure) => Left(failure),
+        (jokes) {
+          // Filtra piadas não deletadas
+          final activeJokes = jokes.where((joke) => !joke.deleted).toList();
 
-      // Filtra piadas não deletadas
-      final activeJokes = jokes.where((joke) => !joke.deleted).toList();
+          if (activeJokes.isEmpty) {
+            return const Left(CacheFailure('Nenhuma piada ativa disponível'));
+          }
 
-      if (activeJokes.isEmpty) {
-        return const Left(CacheFailure('Nenhuma piada ativa disponível'));
-      }
+          // Estratégia: retorna a piada com menor viewCount
+          activeJokes.sort((a, b) => a.viewCount.compareTo(b.viewCount));
 
-      // Estratégia: retorna a piada com menor viewCount
-      activeJokes.sort((a, b) => a.viewCount.compareTo(b.viewCount));
+          // Se houver empate, usa a mais antiga (menor ID)
+          final minViewCount = activeJokes.first.viewCount;
 
-      // Se houver empate, usa a mais antiga (menor ID)
-      final minViewCount = activeJokes.first.viewCount;
-      final leastViewed = activeJokes
-          .where((joke) => joke.viewCount == minViewCount)
-          .reduce((a, b) => a.id < b.id ? a : b);
+          Joke? leastViewed;
+          for (final joke in activeJokes) {
+            if (joke.viewCount == minViewCount) {
+              if (leastViewed == null || joke.id < leastViewed.id) {
+                leastViewed = joke;
+              }
+            }
+          }
 
-      return Right(leastViewed);
+          return Right(leastViewed!);
+        },
+      );
     } on CacheException catch (e) {
       return Left(CacheFailure(e.message));
     }
