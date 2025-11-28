@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../features/jokes/presentation/providers/joke_provider.dart';
 import 'debug_screen.dart';
+import 'create_joke_screen.dart';
+import 'edit_joke_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -77,6 +79,91 @@ class _HomeScreenState extends State<HomeScreen>
         }
 
         return Scaffold(
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Colors.amber, Colors.amber.shade300],
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text(
+                        '🤔',
+                        style: TextStyle(fontSize: 48),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'O que é o que é?',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.add_circle, color: Colors.green),
+                  title: const Text('Criar Nova Piada'),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CreateJokeScreen(),
+                      ),
+                    );
+                    if (result == true && mounted) {
+                      jokeProvider.loadNextJoke();
+                    }
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit, color: Colors.blue),
+                  title: const Text('Editar Piada Atual'),
+                  enabled: joke != null,
+                  onTap: joke == null
+                      ? null
+                      : () async {
+                          Navigator.pop(context);
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditJokeScreen(joke: joke),
+                            ),
+                          );
+                          if (result == true && mounted) {
+                            jokeProvider.loadNextJoke();
+                          }
+                        },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.bug_report, color: Colors.orange),
+                  title: const Text('Debug'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DebugScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
           appBar: AppBar(
             title: GestureDetector(
               onTap: _onTitleTap,
