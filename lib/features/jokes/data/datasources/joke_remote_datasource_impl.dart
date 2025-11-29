@@ -54,11 +54,11 @@ class JokeRemoteDataSourceImpl implements JokeRemoteDataSource {
 
       return JokeModel.fromJson(response);
     } on PostgrestException catch (e) {
-      throw ServerException('Erro ao criar piada: ${e.message}');
+      throw ServerException('Erro ao criar piada (Postgrest): ${e.message}\nCódigo: ${e.code}\nDetalhes: ${e.details}');
     } on ValidationException {
       rethrow;
     } catch (e) {
-      throw ServerException('Erro ao criar piada: ${e.toString()}');
+      throw ServerException('Erro ao criar piada: ${e.toString()}\nTipo: ${e.runtimeType}');
     }
   }
 
