@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen>
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              '🤔',
+                              '😁',
                               style: TextStyle(fontSize: 48),
                             ),
                             SizedBox(height: 8),
