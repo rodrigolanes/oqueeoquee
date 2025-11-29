@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../features/jokes/domain/entities/joke.dart';
 import '../features/jokes/presentation/providers/admin_provider.dart';
-import '../utils/device_utils.dart';
 
 class EditJokeScreen extends StatefulWidget {
   final Joke joke;
@@ -22,55 +21,12 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
   late TextEditingController _questionController;
   late TextEditingController _answerController;
   bool _isLoading = false;
-  bool _isDeviceAllowed = false;
 
   @override
   void initState() {
     super.initState();
     _questionController = TextEditingController(text: widget.joke.question);
     _answerController = TextEditingController(text: widget.joke.answer);
-    _checkDevicePermission();
-  }
-
-  Future<void> _checkDevicePermission() async {
-    final allowed = await DeviceUtils.isDeviceAllowed();
-    if (mounted) {
-      setState(() {
-        _isDeviceAllowed = allowed;
-      });
-
-      if (!allowed) {
-        _showUnauthorizedDialog();
-      }
-    }
-  }
-
-  void _showUnauthorizedDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(Icons.lock, color: Colors.red),
-            SizedBox(width: 8),
-            Text('Acesso Negado'),
-          ],
-        ),
-        content: const Text(
-          'Este dispositivo não tem permissão para editar piadas.\n\nApenas dispositivos autorizados podem acessar esta funcionalidade.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-            child: const Text('Entendi'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -82,11 +38,6 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
 
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
-
-    if (!_isDeviceAllowed) {
-      _showUnauthorizedDialog();
-      return;
-    }
 
     setState(() => _isLoading = true);
 
@@ -120,11 +71,6 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
   }
 
   Future<void> _deleteJoke() async {
-    if (!_isDeviceAllowed) {
-      _showUnauthorizedDialog();
-      return;
-    }
-
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(

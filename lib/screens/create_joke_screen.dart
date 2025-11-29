@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../features/jokes/presentation/providers/admin_provider.dart';
-import '../utils/device_utils.dart';
 
 class CreateJokeScreen extends StatefulWidget {
   const CreateJokeScreen({super.key});
@@ -16,54 +15,6 @@ class _CreateJokeScreenState extends State<CreateJokeScreen> {
   final _questionController = TextEditingController();
   final _answerController = TextEditingController();
   bool _isLoading = false;
-  bool _isDeviceAllowed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkDevicePermission();
-  }
-
-  Future<void> _checkDevicePermission() async {
-    final allowed = await DeviceUtils.isDeviceAllowed();
-    if (mounted) {
-      setState(() {
-        _isDeviceAllowed = allowed;
-      });
-
-      if (!allowed) {
-        _showUnauthorizedDialog();
-      }
-    }
-  }
-
-  void _showUnauthorizedDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(Icons.lock, color: Colors.red),
-            SizedBox(width: 8),
-            Text('Acesso Negado'),
-          ],
-        ),
-        content: const Text(
-          'Este dispositivo não tem permissão para criar piadas.\n\nApenas dispositivos autorizados podem acessar esta funcionalidade.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-            },
-            child: const Text('Entendi'),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   void dispose() {
@@ -74,11 +25,6 @@ class _CreateJokeScreenState extends State<CreateJokeScreen> {
 
   Future<void> _createJoke() async {
     if (!_formKey.currentState!.validate()) return;
-
-    if (!_isDeviceAllowed) {
-      _showUnauthorizedDialog();
-      return;
-    }
 
     setState(() => _isLoading = true);
 

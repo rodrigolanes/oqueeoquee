@@ -3,9 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../features/jokes/presentation/providers/joke_provider.dart';
-import '../utils/device_utils.dart';
 import 'create_joke_screen.dart';
-import 'debug_screen.dart';
 import 'edit_joke_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,41 +32,42 @@ class _HomeScreenState extends State<HomeScreen>
     _fadeAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
 
-    // Verifica se é admin
-    _checkAdminStatus();
-
     // Carrega primeira piada
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<JokeProvider>().loadNextJoke();
     });
   }
 
-  Future<void> _checkAdminStatus() async {
-    final isAllowed = await DeviceUtils.isDeviceAllowed();
-    if (mounted) {
-      setState(() {
-        _isAdmin = isAllowed;
-      });
-    }
-  }
-
   void _onTitleTap() {
     final now = DateTime.now();
 
-    // Reseta contador se passou mais de 2 segundos desde o último toque
-    if (_lastTitleTap != null && now.difference(_lastTitleTap!).inSeconds > 2) {
+    // Reseta contador se passou mais de 3 segundos desde o último toque
+    if (_lastTitleTap != null && now.difference(_lastTitleTap!).inSeconds > 3) {
       _titleTapCount = 0;
     }
 
     _lastTitleTap = now;
     _titleTapCount++;
 
-    if (_titleTapCount >= 3) {
-      _titleTapCount = 0;
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const DebugScreen()),
+    // Ativa modo admin após 10 toques
+    if (_titleTapCount >= 10) {
+      setState(() {
+        _isAdmin = !_isAdmin; // Toggle admin mode
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _isAdmin 
+              ? '🔓 Modo Administrador Ativado' 
+              : '🔒 Modo Administrador Desativado',
+          ),
+          backgroundColor: _isAdmin ? Colors.green : Colors.orange,
+          duration: const Duration(seconds: 2),
+        ),
       );
+      
+      _titleTapCount = 0;
     }
   }
 
@@ -165,15 +164,17 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       const Divider(),
                       ListTile(
-                        leading:
-                            const Icon(Icons.bug_report, color: Colors.orange),
-                        title: const Text('Debug'),
+                        leading: const Icon(Icons.logout, color: Colors.red),
+                        title: const Text('Sair do Modo Admin'),
                         onTap: () {
                           Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DebugScreen(),
+                          setState(() {
+                            _isAdmin = false;
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('🔒 Modo Administrador Desativado'),
+                              backgroundColor: Colors.orange,
                             ),
                           );
                         },
