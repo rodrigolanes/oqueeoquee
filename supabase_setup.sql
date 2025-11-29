@@ -4,7 +4,7 @@
 
 -- 1. Criar tabela jokes
 CREATE TABLE IF NOT EXISTS jokes (
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
   view_count INTEGER NOT NULL DEFAULT 0,
@@ -22,6 +22,12 @@ CREATE INDEX IF NOT EXISTS idx_jokes_updated_at ON jokes(updated_at DESC);
 ALTER TABLE jokes ENABLE ROW LEVEL SECURITY;
 
 -- 4. Criar políticas de acesso público para CRUD completo
+
+-- Remover policies antigas se existirem
+DROP POLICY IF EXISTS "Permitir leitura pública" ON jokes;
+DROP POLICY IF EXISTS "Permitir inserção pública" ON jokes;
+DROP POLICY IF EXISTS "Permitir atualização pública" ON jokes;
+DROP POLICY IF EXISTS "Permitir exclusão pública" ON jokes;
 
 -- Política de SELECT (leitura) - todos podem ler
 CREATE POLICY "Permitir leitura pública"
@@ -44,29 +50,29 @@ CREATE POLICY "Permitir exclusão pública"
 ON jokes FOR DELETE
 USING (true);
 
--- 5. Inserir piadas iniciais
-INSERT INTO jokes (id, question, answer, view_count, deleted, created_at, updated_at) VALUES
-  (1, 'Tem coroa, mas não é rei, tem escama, mas não é peixe?', 'O abacaxi', 0, false, NOW(), NOW()),
-  (2, 'Cai em pé e corre deitado?', 'A chuva', 0, false, NOW(), NOW()),
-  (3, 'Tem dentes mas não morde?', 'O garfo', 0, false, NOW(), NOW()),
-  (4, 'Quanto mais se perde, maior fica?', 'O buraco', 0, false, NOW(), NOW()),
-  (5, 'É surdo e mudo, mas conta tudo?', 'O livro', 0, false, NOW(), NOW()),
-  (6, 'Tem pescoço mas não tem cabeça?', 'A garrafa', 0, false, NOW(), NOW()),
-  (7, 'Sobe quando a chuva desce?', 'O guarda-chuva', 0, false, NOW(), NOW()),
-  (8, 'Tem asa mas não voa?', 'A xícara', 0, false, NOW(), NOW()),
-  (9, 'Enche uma casa mas não enche uma mão?', 'O botão', 0, false, NOW(), NOW()),
-  (10, 'Tem cabeça mas não pensa?', 'O alho', 0, false, NOW(), NOW()),
-  (11, 'Quebra quando se fala?', 'O segredo', 0, false, NOW(), NOW()),
-  (12, 'Tem linha mas não é carretel?', 'O caderno', 0, false, NOW(), NOW()),
-  (13, 'Entre na água mas não se molha?', 'A sombra', 0, false, NOW(), NOW()),
-  (14, 'Vive batendo e nunca apanha?', 'O coração', 0, false, NOW(), NOW()),
-  (15, 'Tem pernas mas não anda?', 'A mesa', 0, false, NOW(), NOW()),
-  (16, 'Corre a casa toda e depois dorme num canto?', 'A vassoura', 0, false, NOW(), NOW()),
-  (17, 'Respira mas não tem pulmão?', 'O acordeon (sanfona)', 0, false, NOW(), NOW()),
-  (18, 'Tem cinco dedos mas não tem unha?', 'A luva', 0, false, NOW(), NOW()),
-  (19, 'Está sempre no meio da rua?', 'A letra U', 0, false, NOW(), NOW()),
-  (20, 'Tem chapéu mas não tem cabeça, tem boca mas não fala?', 'O cogumelo', 0, false, NOW(), NOW())
-ON CONFLICT (id) DO NOTHING;
+-- 5. Inserir piadas iniciais (sem especificar id, será auto-gerado)
+INSERT INTO jokes (question, answer, view_count, deleted, created_at, updated_at) VALUES
+  ('Tem coroa, mas não é rei, tem escama, mas não é peixe?', 'O abacaxi', 0, false, NOW(), NOW()),
+  ('Cai em pé e corre deitado?', 'A chuva', 0, false, NOW(), NOW()),
+  ('Tem dentes mas não morde?', 'O garfo', 0, false, NOW(), NOW()),
+  ('Quanto mais se perde, maior fica?', 'O buraco', 0, false, NOW(), NOW()),
+  ('É surdo e mudo, mas conta tudo?', 'O livro', 0, false, NOW(), NOW()),
+  ('Tem pescoço mas não tem cabeça?', 'A garrafa', 0, false, NOW(), NOW()),
+  ('Sobe quando a chuva desce?', 'O guarda-chuva', 0, false, NOW(), NOW()),
+  ('Tem asa mas não voa?', 'A xícara', 0, false, NOW(), NOW()),
+  ('Enche uma casa mas não enche uma mão?', 'O botão', 0, false, NOW(), NOW()),
+  ('Tem cabeça mas não pensa?', 'O alho', 0, false, NOW(), NOW()),
+  ('Quebra quando se fala?', 'O segredo', 0, false, NOW(), NOW()),
+  ('Tem linha mas não é carretel?', 'O caderno', 0, false, NOW(), NOW()),
+  ('Entre na água mas não se molha?', 'A sombra', 0, false, NOW(), NOW()),
+  ('Vive batendo e nunca apanha?', 'O coração', 0, false, NOW(), NOW()),
+  ('Tem pernas mas não anda?', 'A mesa', 0, false, NOW(), NOW()),
+  ('Corre a casa toda e depois dorme num canto?', 'A vassoura', 0, false, NOW(), NOW()),
+  ('Respira mas não tem pulmão?', 'O acordeon (sanfona)', 0, false, NOW(), NOW()),
+  ('Tem cinco dedos mas não tem unha?', 'A luva', 0, false, NOW(), NOW()),
+  ('Está sempre no meio da rua?', 'A letra U', 0, false, NOW(), NOW()),
+  ('Tem chapéu mas não tem cabeça, tem boca mas não fala?', 'O cogumelo', 0, false, NOW(), NOW())
+ON CONFLICT DO NOTHING;
 
 -- 6. Verificar inserção
 SELECT COUNT(*) as total_piadas FROM jokes WHERE deleted = false;

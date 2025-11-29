@@ -54,19 +54,19 @@ class _HomeScreenState extends State<HomeScreen>
       setState(() {
         _isAdmin = !_isAdmin; // Toggle admin mode
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            _isAdmin 
-              ? '🔓 Modo Administrador Ativado' 
-              : '🔒 Modo Administrador Desativado',
+            _isAdmin
+                ? '🔓 Modo Administrador Ativado'
+                : '🔒 Modo Administrador Desativado',
           ),
           backgroundColor: _isAdmin ? Colors.green : Colors.orange,
           duration: const Duration(seconds: 2),
         ),
       );
-      
+
       _titleTapCount = 0;
     }
   }

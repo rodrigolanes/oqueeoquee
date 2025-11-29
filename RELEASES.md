@@ -2,6 +2,23 @@
 
 ## 📋 Versões
 
+### [5.2.2] - 2025-11-28 (Build 28)
+#### 🐛 Correção Crítica
+
+**Correção de bug que impedia criação de piadas**
+
+#### 🐛 Correções
+- Corrigido erro "id não pode ser nulo" ao criar novas piadas
+- Ajustado schema do banco de dados para usar auto-incremento (SERIAL)
+- Melhorado tratamento de erros com logs detalhados
+
+#### 🛠️ Melhorias Técnicas
+- Script de setup do Supabase atualizado com SERIAL PRIMARY KEY
+- Políticas RLS com DROP IF EXISTS para evitar duplicação
+- INSERT de piadas sem especificar ID (auto-gerado pelo banco)
+
+---
+
 ### [5.2.0] - 2025-11-28 (Build 26)
 #### 🔒 Segurança e Nova Identidade Visual
 
@@ -164,6 +181,8 @@
 
 | Versão | Build | Data       | Downloads | Nota Média |
 |--------|-------|------------|-----------|------------|
+| 5.2.2  | 28    | 2025-11-28 | -         | -          |
+| 5.2.0  | 26    | 2025-11-28 | -         | -          |
 | 5.1.1  | 22    | 2025-11-27 | -         | -          |
 | 5.1.0  | 21    | 2025-11-27 | -         | -          |
 | 5.0.0  | 14    | 2025-11-15 | -         | -          |
@@ -172,6 +191,11 @@
 ---
 
 ## 🐛 Correções de Bugs
+
+### Versão 5.2.2
+- Corrigido erro de criação de piadas no banco de dados
+- Melhorado tratamento de erros de backend
+- Schema do banco atualizado com auto-incremento
 
 ### Versão 5.1.1
 - Reset automático de dados locais ao atualizar
