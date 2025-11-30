@@ -40,6 +40,19 @@ jobs:
         }
         EOF
     
+    - name: Criar admob_config.dart
+      run: |
+        mkdir -p lib/config
+        cat > lib/config/admob_config.dart << 'EOF'
+        /// Configuração do Google AdMob (gerado automaticamente pelo CI)
+        class AdMobConfig {
+          static const String androidAppId = '${{ secrets.ADMOB_APP_ID }}';
+          static const String bannerAdUnitId = '${{ secrets.ADMOB_BANNER_UNIT_ID }}';
+          static const String testBannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
+          static const String testAppId = 'ca-app-pub-3940256099942544~3347511713';
+        }
+        EOF
+    
     - name: Verificar supabase_config.dart criado
       run: |
         echo "Verificando arquivo supabase_config.dart..."
@@ -63,6 +76,30 @@ jobs:
         fi
         
         echo "✅ Secrets do Supabase configuradas corretamente!"
+    
+    - name: Verificar admob_config.dart criado
+      run: |
+        echo "Verificando arquivo admob_config.dart..."
+        if [ ! -f lib/config/admob_config.dart ]; then
+          echo "❌ ERRO: Arquivo admob_config.dart não foi criado!"
+          exit 1
+        fi
+        echo "✅ Arquivo criado. Conteúdo (IDs mascarados):"
+        cat lib/config/admob_config.dart | sed 's/\(androidAppId = \).*/\1"[MASKED]"/g' | sed 's/\(bannerAdUnitId = \).*/\1"[MASKED]"/g'
+        
+        # Verifica se App ID não está vazio
+        if grep -q "androidAppId = '';" lib/config/admob_config.dart; then
+          echo "❌ ERRO: ADMOB_APP_ID está vazio! Configure a secret no GitHub."
+          exit 1
+        fi
+        
+        # Verifica se Banner Unit ID não está vazio
+        if grep -q "bannerAdUnitId = '';" lib/config/admob_config.dart; then
+          echo "❌ ERRO: ADMOB_BANNER_UNIT_ID está vazio! Configure a secret no GitHub."
+          exit 1
+        fi
+        
+        echo "✅ IDs do AdMob configurados corretamente!"
       
     - name: Decode Keystore
       run: |
