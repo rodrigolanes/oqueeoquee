@@ -2,6 +2,33 @@
 
 ## 📋 Versões
 
+### [5.3.0] - 2025-11-29 (Build 29)
+#### 💰 Monetização com Google AdMob
+
+**Integração de anúncios publicitários**
+
+#### ✨ Novidades
+- Banner publicitário na parte inferior da tela principal
+- Integração completa com Google AdMob SDK
+- Anúncios exibidos de forma não intrusiva
+- Carregamento assíncrono dos banners
+
+#### 🛠️ Melhorias Técnicas
+- Dependência `google_mobile_ads: ^5.1.0` adicionada
+- Configuração centralizada em `AdMobConfig`
+- Auto-switch entre test/production ad units via `kDebugMode`
+- Graceful degradation (app funciona mesmo se ad falhar)
+- Dispose automático de ads ao sair da tela
+- Workflow CI/CD atualizado para criar `admob_config.dart`
+- Configuração de Java 17 para suprimir warnings de build
+
+#### 📱 UX
+- Banner 320x50 posicionado na parte inferior
+- Não interfere na navegação ou interação com piadas
+- Feedback visual de carregamento via logs
+
+---
+
 ### [5.2.2] - 2025-11-28 (Build 28)
 #### 🐛 Correção Crítica
 
@@ -165,7 +192,7 @@
 
 ## 🔮 Próximas Versões Planejadas
 
-### [5.2.0] - Em Planejamento
+### [5.4.0] - Em Planejamento
 - Modo escuro
 - Compartilhamento de piadas
 - Mais categorias de piadas
@@ -181,6 +208,7 @@
 
 | Versão | Build | Data       | Downloads | Nota Média |
 |--------|-------|------------|-----------|------------|
+| 5.3.0  | 29    | 2025-11-29 | -         | -          |
 | 5.2.2  | 28    | 2025-11-28 | -         | -          |
 | 5.2.0  | 26    | 2025-11-28 | -         | -          |
 | 5.1.1  | 22    | 2025-11-27 | -         | -          |
