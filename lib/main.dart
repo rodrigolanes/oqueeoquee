@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'injection_container.dart' as di;
 import 'features/jokes/presentation/providers/joke_provider.dart';
 import 'features/jokes/presentation/providers/admin_provider.dart';
@@ -11,6 +12,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
+    // Inicializa Mobile Ads SDK
+    debugPrint('🔧 Inicializando Google Mobile Ads...');
+    await MobileAds.instance.initialize();
+    debugPrint('✅ Google Mobile Ads inicializado!');
+
     // Credenciais devem estar em supabase_config.dart (não commitado)
     debugPrint('🔧 Inicializando Supabase...');
 
