@@ -16,6 +16,7 @@ class AdMobConfig {
   static const String bannerAdUnitId = 'ca-app-pub-XXXXXXXXXXXXXXXX/ZZZZZZZZZZ';
 
   // Test Ad Unit IDs do Google (não modificar)
-  static const String testBannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
+  static const String testBannerAdUnitId =
+      'ca-app-pub-3940256099942544/6300978111';
   static const String testAppId = 'ca-app-pub-3940256099942544~3347511713';
 }
