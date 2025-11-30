@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../features/jokes/presentation/providers/joke_provider.dart';
+import '../config/admob_config.dart';
 import 'create_joke_screen.dart';
 import 'edit_joke_screen.dart';
 
@@ -22,6 +25,10 @@ class _HomeScreenState extends State<HomeScreen>
   DateTime? _lastTitleTap;
   bool _isAdmin = false;
 
+  // Banner Ad
+  BannerAd? _bannerAd;
+  bool _isBannerAdReady = false;
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +43,9 @@ class _HomeScreenState extends State<HomeScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<JokeProvider>().loadNextJoke();
     });
+
+    // Carrega banner ad
+    _loadBannerAd();
   }
 
   void _onTitleTap() {
@@ -71,9 +81,38 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: _getAdUnitId(),
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+          debugPrint('✅ Banner ad carregado com sucesso');
+        },
+        onAdFailedToLoad: (ad, error) {
+          debugPrint('❌ Banner ad falhou ao carregar: $error');
+          ad.dispose();
+        },
+      ),
+    )..load();
+  }
+
+  String _getAdUnitId() {
+    // Usa test ID em debug mode, production ID em release
+    if (kDebugMode) {
+      return AdMobConfig.testBannerAdUnitId;
+    }
+    return AdMobConfig.bannerAdUnitId;
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -445,6 +484,16 @@ class _HomeScreenState extends State<HomeScreen>
                             ],
                           ),
                         ),
+
+                        // Banner Ad
+                        if (_isBannerAdReady && _bannerAd != null)
+                          Container(
+                            width: _bannerAd!.size.width.toDouble(),
+                            height: _bannerAd!.size.height.toDouble(),
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: AdWidget(ad: _bannerAd!),
+                          ),
                       ],
                     ),
                   ),
