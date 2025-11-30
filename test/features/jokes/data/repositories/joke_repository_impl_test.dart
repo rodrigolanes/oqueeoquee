@@ -81,26 +81,26 @@ void main() {
     test('deve retornar CacheFailure quando houver CacheException', () async {
       // arrange
       when(mockLocalDataSource.getJokes())
-          .thenThrow(CacheException('Erro no cache'));
+          .thenThrow(const CacheException('Erro no cache'));
 
       // act
       final result = await repository.getJokes();
 
       // assert
-      expect(result, Left(const CacheFailure('Erro no cache')));
+      expect(result, const Left(CacheFailure('Erro no cache')));
     });
 
     test('deve retornar ServerFailure quando remoto falhar', () async {
       // arrange
       when(mockLocalDataSource.getJokes()).thenAnswer((_) async => []);
       when(mockRemoteDataSource.getJokes())
-          .thenThrow(ServerException('Erro no servidor'));
+          .thenThrow(const ServerException('Erro no servidor'));
 
       // act
       final result = await repository.getJokes();
 
       // assert
-      expect(result, Left(const ServerFailure('Erro no servidor')));
+      expect(result, const Left(ServerFailure('Erro no servidor')));
     });
   });
 
@@ -223,13 +223,13 @@ void main() {
     test('deve retornar CacheFailure quando houver erro', () async {
       // arrange
       when(mockLocalDataSource.incrementViewCount(any))
-          .thenThrow(CacheException('Erro'));
+          .thenThrow(const CacheException('Erro'));
 
       // act
       final result = await repository.incrementViewCount(1);
 
       // assert
-      expect(result, Left(const CacheFailure('Erro')));
+      expect(result, const Left(CacheFailure('Erro')));
     });
   });
 
@@ -297,7 +297,7 @@ void main() {
       );
 
       // assert
-      expect(result, Left(const ValidationFailure('Inválido')));
+      expect(result, const Left(ValidationFailure('Inválido')));
     });
   });
 
@@ -381,7 +381,7 @@ void main() {
       final result = await repository.syncWithRemote();
 
       // assert
-      expect(result, Left(const ServerFailure('Erro')));
+      expect(result, const Left(ServerFailure('Erro')));
     });
   });
 }
