@@ -55,9 +55,6 @@ key.properties
 # Supabase credentials
 /lib/config/supabase_config.dart
 
-# AdMob configuration (opcional - IDs são públicos mas pode preferir manter privado)
-/lib/config/admob_config.dart
-
 # Local configuration
 /android/local.properties
 
