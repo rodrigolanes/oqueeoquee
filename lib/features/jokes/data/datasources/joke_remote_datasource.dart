@@ -40,4 +40,16 @@ abstract class JokeRemoteDataSource {
   /// Envia os viewCounts locais para o servidor
   /// Throws [ServerException] se houver erro na sincronização
   Future<void> syncViewCounts(List<JokeModel> localJokes);
+
+  /// Incrementa o contador de likes de uma piada
+  ///
+  /// Throws [ServerException] se houver erro ao incrementar
+  /// Throws [NetworkException] se não houver conexão
+  Future<void> incrementLike(int jokeId);
+
+  /// Incrementa o contador de dislikes de uma piada
+  ///
+  /// Throws [ServerException] se houver erro ao incrementar
+  /// Throws [NetworkException] se não houver conexão
+  Future<void> incrementDislike(int jokeId);
 }

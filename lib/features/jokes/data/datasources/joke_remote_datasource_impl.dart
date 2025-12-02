@@ -129,4 +129,70 @@ class JokeRemoteDataSourceImpl implements JokeRemoteDataSource {
       throw ServerException('Erro ao sincronizar contadores: ${e.toString()}');
     }
   }
+
+  @override
+  Future<void> incrementLike(int jokeId) async {
+    try {
+      // Usa RPC (Remote Procedure Call) do Supabase para incremento atômico
+      // ou faz update direto incrementando
+      await supabaseClient.rpc('increment_like', params: {'joke_id': jokeId});
+    } on PostgrestException catch (e) {
+      // Fallback: se RPC não existir, usa SQL direto
+      if (e.code == 'PGRST202' || e.message.contains('not found')) {
+        try {
+          // Busca valor atual, incrementa e salva
+          final current = await supabaseClient
+              .from('jokes')
+              .select('like_count')
+              .eq('id', jokeId)
+              .single();
+
+          final newCount = (current['like_count'] as int? ?? 0) + 1;
+
+          await supabaseClient
+              .from('jokes')
+              .update({'like_count': newCount}).eq('id', jokeId);
+        } catch (fallbackError) {
+          throw ServerException('Erro ao dar like: $fallbackError');
+        }
+      } else {
+        throw ServerException('Erro ao dar like: ${e.message}');
+      }
+    } catch (e) {
+      throw ServerException('Erro ao dar like: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> incrementDislike(int jokeId) async {
+    try {
+      // Usa RPC (Remote Procedure Call) do Supabase para incremento atômico
+      await supabaseClient
+          .rpc('increment_dislike', params: {'joke_id': jokeId});
+    } on PostgrestException catch (e) {
+      // Fallback: se RPC não existir, usa SQL direto
+      if (e.code == 'PGRST202' || e.message.contains('not found')) {
+        try {
+          // Busca valor atual, incrementa e salva
+          final current = await supabaseClient
+              .from('jokes')
+              .select('dislike_count')
+              .eq('id', jokeId)
+              .single();
+
+          final newCount = (current['dislike_count'] as int? ?? 0) + 1;
+
+          await supabaseClient
+              .from('jokes')
+              .update({'dislike_count': newCount}).eq('id', jokeId);
+        } catch (fallbackError) {
+          throw ServerException('Erro ao dar dislike: $fallbackError');
+        }
+      } else {
+        throw ServerException('Erro ao dar dislike: ${e.message}');
+      }
+    } catch (e) {
+      throw ServerException('Erro ao dar dislike: ${e.toString()}');
+    }
+  }
 }
