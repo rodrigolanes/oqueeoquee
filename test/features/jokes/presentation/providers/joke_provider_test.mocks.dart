@@ -12,10 +12,14 @@ import 'package:oqueeoquee/core/usecases/usecase.dart' as _i8;
 import 'package:oqueeoquee/features/jokes/domain/entities/joke.dart' as _i7;
 import 'package:oqueeoquee/features/jokes/domain/repositories/joke_repository.dart'
     as _i2;
+import 'package:oqueeoquee/features/jokes/domain/usecases/dislike_joke.dart'
+    as _i12;
 import 'package:oqueeoquee/features/jokes/domain/usecases/get_next_joke.dart'
     as _i4;
 import 'package:oqueeoquee/features/jokes/domain/usecases/increment_view_count.dart'
     as _i9;
+import 'package:oqueeoquee/features/jokes/domain/usecases/like_joke.dart'
+    as _i11;
 import 'package:oqueeoquee/features/jokes/domain/usecases/reset_view_counters.dart'
     as _i10;
 
@@ -146,6 +150,77 @@ class MockResetViewCounters extends _i1.Mock implements _i10.ResetViewCounters {
 
   @override
   _i5.Future<_i3.Either<_i6.Failure, void>> call(_i8.NoParams? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i5.Future<_i3.Either<_i6.Failure, void>>.value(
+            _FakeEither_1<_i6.Failure, void>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i5.Future<_i3.Either<_i6.Failure, void>>);
+}
+
+/// A class which mocks [LikeJoke].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLikeJoke extends _i1.Mock implements _i11.LikeJoke {
+  MockLikeJoke() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.JokeRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeJokeRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.JokeRepository);
+
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, void>> call(_i11.LikeJokeParams? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i5.Future<_i3.Either<_i6.Failure, void>>.value(
+            _FakeEither_1<_i6.Failure, void>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i5.Future<_i3.Either<_i6.Failure, void>>);
+}
+
+/// A class which mocks [DislikeJoke].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockDislikeJoke extends _i1.Mock implements _i12.DislikeJoke {
+  MockDislikeJoke() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.JokeRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeJokeRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.JokeRepository);
+
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, void>> call(
+          _i12.DislikeJokeParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,

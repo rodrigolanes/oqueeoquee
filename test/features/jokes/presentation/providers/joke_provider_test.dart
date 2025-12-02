@@ -7,25 +7,33 @@ import 'package:oqueeoquee/features/jokes/domain/entities/joke.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/get_next_joke.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/increment_view_count.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/reset_view_counters.dart';
+import 'package:oqueeoquee/features/jokes/domain/usecases/like_joke.dart';
+import 'package:oqueeoquee/features/jokes/domain/usecases/dislike_joke.dart';
 import 'package:oqueeoquee/features/jokes/presentation/providers/joke_provider.dart';
 
 import 'joke_provider_test.mocks.dart';
 
-@GenerateMocks([GetNextJoke, IncrementViewCount, ResetViewCounters])
+@GenerateMocks([GetNextJoke, IncrementViewCount, ResetViewCounters, LikeJoke, DislikeJoke])
 void main() {
   late JokeProvider provider;
   late MockGetNextJoke mockGetNextJoke;
   late MockIncrementViewCount mockIncrementViewCount;
   late MockResetViewCounters mockResetViewCounters;
+  late MockLikeJoke mockLikeJoke;
+  late MockDislikeJoke mockDislikeJoke;
 
   setUp(() {
     mockGetNextJoke = MockGetNextJoke();
     mockIncrementViewCount = MockIncrementViewCount();
     mockResetViewCounters = MockResetViewCounters();
+    mockLikeJoke = MockLikeJoke();
+    mockDislikeJoke = MockDislikeJoke();
     provider = JokeProvider(
       getNextJokeUseCase: mockGetNextJoke,
       incrementViewCountUseCase: mockIncrementViewCount,
       resetViewCountersUseCase: mockResetViewCounters,
+      likeJokeUseCase: mockLikeJoke,
+      dislikeJokeUseCase: mockDislikeJoke,
     );
   });
 
