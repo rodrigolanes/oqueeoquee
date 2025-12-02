@@ -35,6 +35,12 @@ abstract class JokeRepository {
   /// Deleta uma piada (soft delete - admin only)
   Future<Either<Failure, void>> deleteJoke(int id);
 
+  /// Incrementa o contador de likes de uma piada
+  Future<Either<Failure, void>> likeJoke(int jokeId);
+
+  /// Incrementa o contador de dislikes de uma piada
+  Future<Either<Failure, void>> dislikeJoke(int jokeId);
+
   /// Sincroniza dados locais com remotos
   Future<Either<Failure, void>> syncWithRemote();
 }

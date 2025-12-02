@@ -190,6 +190,40 @@ class MockJokeRepository extends _i1.Mock implements _i3.JokeRepository {
       ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
 
   @override
+  _i4.Future<_i2.Either<_i5.Failure, void>> likeJoke(int? jokeId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #likeJoke,
+          [jokeId],
+        ),
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+            _FakeEither_0<_i5.Failure, void>(
+          this,
+          Invocation.method(
+            #likeJoke,
+            [jokeId],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, void>> dislikeJoke(int? jokeId) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #dislikeJoke,
+          [jokeId],
+        ),
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+            _FakeEither_0<_i5.Failure, void>(
+          this,
+          Invocation.method(
+            #dislikeJoke,
+            [jokeId],
+          ),
+        )),
+      ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
+
+  @override
   _i4.Future<_i2.Either<_i5.Failure, void>> syncWithRemote() =>
       (super.noSuchMethod(
         Invocation.method(

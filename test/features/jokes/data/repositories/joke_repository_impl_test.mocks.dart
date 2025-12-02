@@ -259,4 +259,24 @@ class MockJokeRemoteDataSource extends _i1.Mock
         returnValue: _i4.Future<void>.value(),
         returnValueForMissingStub: _i4.Future<void>.value(),
       ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> incrementLike(int? jokeId) => (super.noSuchMethod(
+        Invocation.method(
+          #incrementLike,
+          [jokeId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> incrementDislike(int? jokeId) => (super.noSuchMethod(
+        Invocation.method(
+          #incrementDislike,
+          [jokeId],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 }

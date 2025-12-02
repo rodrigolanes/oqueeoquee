@@ -422,6 +422,31 @@ class _HomeScreenState extends State<HomeScreen>
                                               ),
                                             ),
                                           ],
+                                          
+                                          // Botões de Like/Dislike (aparecem apenas se não votou ainda)
+                                          if (showAnswer && !jokeProvider.hasVoted) ...[
+                                            const SizedBox(height: 24),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                // Botão de Like
+                                                _VoteButton(
+                                                  icon: Icons.thumb_up,
+                                                  label: 'Gostei',
+                                                  color: Colors.green,
+                                                  onPressed: () => jokeProvider.likeJoke(),
+                                                ),
+                                                const SizedBox(width: 16),
+                                                // Botão de Dislike
+                                                _VoteButton(
+                                                  icon: Icons.thumb_down,
+                                                  label: 'Não gostei',
+                                                  color: Colors.red,
+                                                  onPressed: () => jokeProvider.dislikeJoke(),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ],
                                       ),
                                     ),
@@ -500,6 +525,43 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
         );
       },
+    );
+  }
+}
+
+/// Widget de botão de votação (Like/Dislike)
+class _VoteButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onPressed;
+
+  const _VoteButton({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 20),
+        label: Text(
+          label,
+          style: const TextStyle(fontSize: 13),
+        ),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: color,
+          side: BorderSide(color: color, width: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+      ),
     );
   }
 }

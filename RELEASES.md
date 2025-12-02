@@ -2,6 +2,43 @@
 
 ## 📋 Versões
 
+### [5.4.0] - 2025-12-01 (Build 30)
+#### 👍👎 Sistema de Avaliação de Piadas
+
+**Implementação de like/dislike com rastreamento de engajamento**
+
+#### ✨ Novidades
+- Botões de "Gostei" 👍 e "Não gostei" 👎 após revelar resposta
+- Sistema de votação mutualmente exclusivo (like OU dislike)
+- Botões desaparecem automaticamente após votação
+- Botões reaparecem ao ver a mesma piada novamente
+- Feedback visual com animação de escala ao clicar
+- Dados de engajamento enviados ao Supabase
+
+#### 🛠️ Melhorias Técnicas
+- `google_mobile_ads` atualizado de v5.1.0 para v6.0.0
+- Campos `like_count` e `dislike_count` adicionados ao banco de dados
+- RPC functions `increment_like` e `increment_dislike` no Supabase (atomicidade)
+- Use cases `LikeJoke` e `DislikeJoke` seguindo Clean Architecture
+- Rastreamento de votos em memória via `Set<int> _votedJokes` (session-based)
+- Fallback de incremento se RPC não disponível
+- Widget `_VoteButton` reutilizável com animações
+- Testes unitários atualizados para novos use cases
+
+#### 📊 Dados
+- Contadores de like/dislike armazenados remotamente
+- Incrementos atômicos via PostgreSQL RPC
+- Índices em `like_count` e `dislike_count` para futuras queries
+- Nenhuma persistência local (usuário pode votar novamente após reiniciar app)
+
+#### 🎨 UX
+- Botões aparecem apenas após resposta revelada
+- UI limpa sem contadores visíveis
+- Animação suave de feedback ao votar
+- Cores semânticas (verde para like, vermelho para dislike)
+
+---
+
 ### [5.3.0] - 2025-11-29 (Build 29)
 #### 💰 Monetização com Google AdMob
 

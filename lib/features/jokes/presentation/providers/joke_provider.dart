@@ -3,6 +3,8 @@ import '../../domain/entities/joke.dart';
 import '../../domain/usecases/get_next_joke.dart';
 import '../../domain/usecases/increment_view_count.dart';
 import '../../domain/usecases/reset_view_counters.dart';
+import '../../domain/usecases/like_joke.dart';
+import '../../domain/usecases/dislike_joke.dart';
 import '../../../../core/usecases/usecase.dart';
 
 /// Provider para gerenciar estado de piadas do usuário
@@ -12,11 +14,15 @@ class JokeProvider extends ChangeNotifier {
   final GetNextJoke getNextJokeUseCase;
   final IncrementViewCount incrementViewCountUseCase;
   final ResetViewCounters resetViewCountersUseCase;
+  final LikeJoke likeJokeUseCase;
+  final DislikeJoke dislikeJokeUseCase;
 
   JokeProvider({
     required this.getNextJokeUseCase,
     required this.incrementViewCountUseCase,
     required this.resetViewCountersUseCase,
+    required this.likeJokeUseCase,
+    required this.dislikeJokeUseCase,
   });
 
   // Estado
@@ -24,6 +30,7 @@ class JokeProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   bool _answerRevealed = false;
+  final Set<int> _votedJokes = {}; // IDs das piadas votadas na sessão atual
 
   // Getters
   Joke? get currentJoke => _currentJoke;
@@ -31,6 +38,12 @@ class JokeProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get answerRevealed => _answerRevealed;
   bool get hasJoke => _currentJoke != null;
+  
+  /// Verifica se a piada atual já foi votada (like ou dislike)
+  bool get hasVoted {
+    if (_currentJoke == null) return false;
+    return _votedJokes.contains(_currentJoke!.id);
+  }
 
   /// Carrega a próxima piada
   Future<void> loadNextJoke() async {
@@ -118,6 +131,46 @@ class JokeProvider extends ChangeNotifier {
   }
 
   /// Reseta o estado do provider
+
+  /// Dá like na piada atual
+  Future<void> likeJoke() async {
+    if (_currentJoke == null || hasVoted) return;
+
+    final jokeId = _currentJoke!.id;
+    final result = await likeJokeUseCase(LikeJokeParams(jokeId: jokeId));
+
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        notifyListeners();
+      },
+      (_) {
+        // Adiciona ao Set de votados e notifica listeners para ocultar botões
+        _votedJokes.add(jokeId);
+        notifyListeners();
+      },
+    );
+  }
+
+  /// Dá dislike na piada atual
+  Future<void> dislikeJoke() async {
+    if (_currentJoke == null || hasVoted) return;
+
+    final jokeId = _currentJoke!.id;
+    final result = await dislikeJokeUseCase(DislikeJokeParams(jokeId: jokeId));
+
+    result.fold(
+      (failure) {
+        _errorMessage = failure.message;
+        notifyListeners();
+      },
+      (_) {
+        // Adiciona ao Set de votados e notifica listeners para ocultar botões
+        _votedJokes.add(jokeId);
+        notifyListeners();
+      },
+    );
+  }
   void reset() {
     _currentJoke = null;
     _isLoading = false;

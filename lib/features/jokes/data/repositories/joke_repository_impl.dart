@@ -180,6 +180,30 @@ class JokeRepositoryImpl implements JokeRepository {
   }
 
   @override
+  Future<Either<Failure, void>> likeJoke(int jokeId) async {
+    try {
+      await remoteDataSource.incrementLike(jokeId);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> dislikeJoke(int jokeId) async {
+    try {
+      await remoteDataSource.incrementDislike(jokeId);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> syncWithRemote() async {
     try {
       // Busca piadas remotas
