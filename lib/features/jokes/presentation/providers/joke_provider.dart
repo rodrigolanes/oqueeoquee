@@ -38,7 +38,7 @@ class JokeProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get answerRevealed => _answerRevealed;
   bool get hasJoke => _currentJoke != null;
-  
+
   /// Verifica se a piada atual já foi votada (like ou dislike)
   bool get hasVoted {
     if (_currentJoke == null) return false;
@@ -171,6 +171,7 @@ class JokeProvider extends ChangeNotifier {
       },
     );
   }
+
   void reset() {
     _currentJoke = null;
     _isLoading = false;

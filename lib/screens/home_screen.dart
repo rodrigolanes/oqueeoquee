@@ -422,19 +422,22 @@ class _HomeScreenState extends State<HomeScreen>
                                               ),
                                             ),
                                           ],
-                                          
+
                                           // Botões de Like/Dislike (aparecem apenas se não votou ainda)
-                                          if (showAnswer && !jokeProvider.hasVoted) ...[
+                                          if (showAnswer &&
+                                              !jokeProvider.hasVoted) ...[
                                             const SizedBox(height: 24),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 // Botão de Like
                                                 _VoteButton(
                                                   icon: Icons.thumb_up,
                                                   label: 'Gostei',
                                                   color: Colors.green,
-                                                  onPressed: () => jokeProvider.likeJoke(),
+                                                  onPressed: () =>
+                                                      jokeProvider.likeJoke(),
                                                 ),
                                                 const SizedBox(width: 16),
                                                 // Botão de Dislike
@@ -442,7 +445,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                   icon: Icons.thumb_down,
                                                   label: 'Não gostei',
                                                   color: Colors.red,
-                                                  onPressed: () => jokeProvider.dislikeJoke(),
+                                                  onPressed: () => jokeProvider
+                                                      .dislikeJoke(),
                                                 ),
                                               ],
                                             ),

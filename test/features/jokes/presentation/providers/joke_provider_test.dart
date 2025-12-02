@@ -13,7 +13,8 @@ import 'package:oqueeoquee/features/jokes/presentation/providers/joke_provider.d
 
 import 'joke_provider_test.mocks.dart';
 
-@GenerateMocks([GetNextJoke, IncrementViewCount, ResetViewCounters, LikeJoke, DislikeJoke])
+@GenerateMocks(
+    [GetNextJoke, IncrementViewCount, ResetViewCounters, LikeJoke, DislikeJoke])
 void main() {
   late JokeProvider provider;
   late MockGetNextJoke mockGetNextJoke;
