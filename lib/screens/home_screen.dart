@@ -530,7 +530,7 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 /// Widget de botão de votação (Like/Dislike)
-class _VoteButton extends StatefulWidget {
+class _VoteButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
@@ -544,52 +544,19 @@ class _VoteButton extends StatefulWidget {
   });
 
   @override
-  State<_VoteButton> createState() => _VoteButtonState();
-}
-
-class _VoteButtonState extends State<_VoteButton> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _handlePress() async {
-    // Animação de feedback
-    await _controller.forward();
-    await _controller.reverse();
-    
-    // Executa ação
-    widget.onPressed();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _scaleAnimation,
+    return Expanded(
       child: OutlinedButton.icon(
-        onPressed: _handlePress,
-        icon: Icon(widget.icon),
-        label: Text(widget.label),
+        onPressed: onPressed,
+        icon: Icon(icon, size: 20),
+        label: Text(
+          label,
+          style: const TextStyle(fontSize: 13),
+        ),
         style: OutlinedButton.styleFrom(
-          foregroundColor: widget.color,
-          side: BorderSide(color: widget.color, width: 2),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          foregroundColor: color,
+          side: BorderSide(color: color, width: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
