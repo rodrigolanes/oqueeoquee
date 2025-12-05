@@ -2,6 +2,40 @@
 
 ## 📋 Versões
 
+### [5.5.0] - 2025-12-04 (Build 31)
+#### 🔄 Sincronização Automática e Gerenciamento de Piadas
+
+**Melhorias de gestão e sincronização**
+
+#### ✨ Novidades
+- Sincronização automática com Supabase ao abrir app
+- Nova tela "Gerenciar Todas as Piadas" no menu admin
+- Lista completa com estatísticas (Total, Ativas, Deletadas)
+- Clique em qualquer piada da lista para editar
+- Contador de visualizações exibido por piada
+- Refresh manual na tela de gerenciamento
+
+#### 🛠️ Melhorias Técnicas
+- Use case `SyncWithRemote` para sincronização de dados
+- Use case `GetAllJokes` para listagem completa
+- JokeProvider atualizado com parâmetro `syncFirst`
+- AdminProvider expandido com `loadAllJokes()`
+- Testes unitários completos para novos use cases
+
+#### 🎨 UX
+- Header com cards de estatísticas coloridos
+- Piadas deletadas com indicação visual (tachado + cinza)
+- Lista ordenada por ID para fácil localização
+- AppBar com botão de refresh
+- Navegação fluida com sincronização ao retornar
+
+#### 🐛 Correções
+- App agora busca atualizações do Supabase ao iniciar
+- Cache local sincronizado automaticamente
+- Garante que dados estão sempre atualizados
+
+---
+
 ### [5.4.0] - 2025-12-01 (Build 30)
 #### 👍👎 Sistema de Avaliação de Piadas
 

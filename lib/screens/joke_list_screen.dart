@@ -267,7 +267,8 @@ class _JokeListItem extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: joke.deleted ? Colors.grey.shade500 : Colors.grey.shade700,
+                color:
+                    joke.deleted ? Colors.grey.shade500 : Colors.grey.shade700,
               ),
             ),
             const SizedBox(height: 4),
