@@ -8,6 +8,7 @@ import 'dart:async' as _i5;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:oqueeoquee/core/error/failures.dart' as _i6;
+import 'package:oqueeoquee/core/usecases/usecase.dart' as _i11;
 import 'package:oqueeoquee/features/jokes/domain/entities/joke.dart' as _i7;
 import 'package:oqueeoquee/features/jokes/domain/repositories/joke_repository.dart'
     as _i2;
@@ -15,6 +16,8 @@ import 'package:oqueeoquee/features/jokes/domain/usecases/create_joke.dart'
     as _i4;
 import 'package:oqueeoquee/features/jokes/domain/usecases/delete_joke.dart'
     as _i9;
+import 'package:oqueeoquee/features/jokes/domain/usecases/get_all_jokes.dart'
+    as _i10;
 import 'package:oqueeoquee/features/jokes/domain/usecases/update_joke.dart'
     as _i8;
 
@@ -160,4 +163,40 @@ class MockDeleteJoke extends _i1.Mock implements _i9.DeleteJoke {
           ),
         )),
       ) as _i5.Future<_i3.Either<_i6.Failure, void>>);
+}
+
+/// A class which mocks [GetAllJokes].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetAllJokes extends _i1.Mock implements _i10.GetAllJokes {
+  MockGetAllJokes() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.JokeRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeJokeRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.JokeRepository);
+
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, List<_i7.Joke>>> call(
+          _i11.NoParams? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i5.Future<_i3.Either<_i6.Failure, List<_i7.Joke>>>.value(
+            _FakeEither_1<_i6.Failure, List<_i7.Joke>>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i5.Future<_i3.Either<_i6.Failure, List<_i7.Joke>>>);
 }

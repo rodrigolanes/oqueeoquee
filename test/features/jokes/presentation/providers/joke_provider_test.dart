@@ -9,12 +9,19 @@ import 'package:oqueeoquee/features/jokes/domain/usecases/increment_view_count.d
 import 'package:oqueeoquee/features/jokes/domain/usecases/reset_view_counters.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/like_joke.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/dislike_joke.dart';
+import 'package:oqueeoquee/features/jokes/domain/usecases/sync_with_remote.dart';
 import 'package:oqueeoquee/features/jokes/presentation/providers/joke_provider.dart';
 
 import 'joke_provider_test.mocks.dart';
 
-@GenerateMocks(
-    [GetNextJoke, IncrementViewCount, ResetViewCounters, LikeJoke, DislikeJoke])
+@GenerateMocks([
+  GetNextJoke,
+  IncrementViewCount,
+  ResetViewCounters,
+  LikeJoke,
+  DislikeJoke,
+  SyncWithRemote
+])
 void main() {
   late JokeProvider provider;
   late MockGetNextJoke mockGetNextJoke;
@@ -22,6 +29,7 @@ void main() {
   late MockResetViewCounters mockResetViewCounters;
   late MockLikeJoke mockLikeJoke;
   late MockDislikeJoke mockDislikeJoke;
+  late MockSyncWithRemote mockSyncWithRemote;
 
   setUp(() {
     mockGetNextJoke = MockGetNextJoke();
@@ -29,12 +37,14 @@ void main() {
     mockResetViewCounters = MockResetViewCounters();
     mockLikeJoke = MockLikeJoke();
     mockDislikeJoke = MockDislikeJoke();
+    mockSyncWithRemote = MockSyncWithRemote();
     provider = JokeProvider(
       getNextJokeUseCase: mockGetNextJoke,
       incrementViewCountUseCase: mockIncrementViewCount,
       resetViewCountersUseCase: mockResetViewCounters,
       likeJokeUseCase: mockLikeJoke,
       dislikeJokeUseCase: mockDislikeJoke,
+      syncWithRemoteUseCase: mockSyncWithRemote,
     );
   });
 

@@ -7,25 +7,29 @@ import 'package:oqueeoquee/features/jokes/domain/entities/joke.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/create_joke.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/update_joke.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/delete_joke.dart';
+import 'package:oqueeoquee/features/jokes/domain/usecases/get_all_jokes.dart';
 import 'package:oqueeoquee/features/jokes/presentation/providers/admin_provider.dart';
 
 import 'admin_provider_test.mocks.dart';
 
-@GenerateMocks([CreateJoke, UpdateJoke, DeleteJoke])
+@GenerateMocks([CreateJoke, UpdateJoke, DeleteJoke, GetAllJokes])
 void main() {
   late AdminProvider provider;
   late MockCreateJoke mockCreateJoke;
   late MockUpdateJoke mockUpdateJoke;
   late MockDeleteJoke mockDeleteJoke;
+  late MockGetAllJokes mockGetAllJokes;
 
   setUp(() {
     mockCreateJoke = MockCreateJoke();
     mockUpdateJoke = MockUpdateJoke();
     mockDeleteJoke = MockDeleteJoke();
+    mockGetAllJokes = MockGetAllJokes();
     provider = AdminProvider(
       createJokeUseCase: mockCreateJoke,
       updateJokeUseCase: mockUpdateJoke,
       deleteJokeUseCase: mockDeleteJoke,
+      getAllJokesUseCase: mockGetAllJokes,
     );
   });
 

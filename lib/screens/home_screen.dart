@@ -8,6 +8,7 @@ import '../features/jokes/presentation/providers/joke_provider.dart';
 import '../config/admob_config.dart';
 import 'create_joke_screen.dart';
 import 'edit_joke_screen.dart';
+import 'joke_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,9 +40,9 @@ class _HomeScreenState extends State<HomeScreen>
     _fadeAnimation =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
 
-    // Carrega primeira piada
+    // Carrega primeira piada com sincronização
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<JokeProvider>().loadNextJoke();
+      context.read<JokeProvider>().loadNextJoke(syncFirst: true);
     });
 
     // Carrega banner ad
@@ -200,6 +201,22 @@ class _HomeScreenState extends State<HomeScreen>
                                   jokeProvider.loadNextJoke();
                                 }
                               },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.list, color: Colors.purple),
+                        title: const Text('Gerenciar Todas as Piadas'),
+                        onTap: () async {
+                          Navigator.pop(context);
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const JokeListScreen(),
+                            ),
+                          );
+                          if (mounted) {
+                            jokeProvider.loadNextJoke(syncFirst: true);
+                          }
+                        },
                       ),
                       const Divider(),
                       ListTile(

@@ -5,6 +5,7 @@ import '../../domain/usecases/increment_view_count.dart';
 import '../../domain/usecases/reset_view_counters.dart';
 import '../../domain/usecases/like_joke.dart';
 import '../../domain/usecases/dislike_joke.dart';
+import '../../domain/usecases/sync_with_remote.dart';
 import '../../../../core/usecases/usecase.dart';
 
 /// Provider para gerenciar estado de piadas do usuário
@@ -16,6 +17,7 @@ class JokeProvider extends ChangeNotifier {
   final ResetViewCounters resetViewCountersUseCase;
   final LikeJoke likeJokeUseCase;
   final DislikeJoke dislikeJokeUseCase;
+  final SyncWithRemote syncWithRemoteUseCase;
 
   JokeProvider({
     required this.getNextJokeUseCase,
@@ -23,6 +25,7 @@ class JokeProvider extends ChangeNotifier {
     required this.resetViewCountersUseCase,
     required this.likeJokeUseCase,
     required this.dislikeJokeUseCase,
+    required this.syncWithRemoteUseCase,
   });
 
   // Estado
@@ -46,11 +49,16 @@ class JokeProvider extends ChangeNotifier {
   }
 
   /// Carrega a próxima piada
-  Future<void> loadNextJoke() async {
+  Future<void> loadNextJoke({bool syncFirst = false}) async {
     _isLoading = true;
     _errorMessage = null;
     _answerRevealed = false;
     notifyListeners();
+
+    // Sincroniza com servidor se solicitado
+    if (syncFirst) {
+      await _syncWithRemote();
+    }
 
     final result = await getNextJokeUseCase(const NoParams());
 
@@ -65,6 +73,19 @@ class JokeProvider extends ChangeNotifier {
         _currentJoke = joke;
         _isLoading = false;
         notifyListeners();
+      },
+    );
+  }
+
+  /// Sincroniza com servidor remoto
+  Future<void> _syncWithRemote() async {
+    final result = await syncWithRemoteUseCase(const NoParams());
+    result.fold(
+      (failure) {
+        debugPrint('Erro ao sincronizar com servidor: ${failure.message}');
+      },
+      (_) {
+        debugPrint('Sincronização com servidor concluída');
       },
     );
   }

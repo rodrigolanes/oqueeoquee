@@ -22,6 +22,8 @@ import 'package:oqueeoquee/features/jokes/domain/usecases/like_joke.dart'
     as _i11;
 import 'package:oqueeoquee/features/jokes/domain/usecases/reset_view_counters.dart'
     as _i10;
+import 'package:oqueeoquee/features/jokes/domain/usecases/sync_with_remote.dart'
+    as _i13;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -221,6 +223,41 @@ class MockDislikeJoke extends _i1.Mock implements _i12.DislikeJoke {
   @override
   _i5.Future<_i3.Either<_i6.Failure, void>> call(
           _i12.DislikeJokeParams? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i5.Future<_i3.Either<_i6.Failure, void>>.value(
+            _FakeEither_1<_i6.Failure, void>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i5.Future<_i3.Either<_i6.Failure, void>>);
+}
+
+/// A class which mocks [SyncWithRemote].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSyncWithRemote extends _i1.Mock implements _i13.SyncWithRemote {
+  MockSyncWithRemote() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.JokeRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeJokeRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.JokeRepository);
+
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, void>> call(_i8.NoParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,

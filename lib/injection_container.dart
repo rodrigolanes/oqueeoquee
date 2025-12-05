@@ -21,6 +21,8 @@ import 'features/jokes/domain/usecases/update_joke.dart';
 import 'features/jokes/domain/usecases/delete_joke.dart';
 import 'features/jokes/domain/usecases/like_joke.dart';
 import 'features/jokes/domain/usecases/dislike_joke.dart';
+import 'features/jokes/domain/usecases/sync_with_remote.dart';
+import 'features/jokes/domain/usecases/get_all_jokes.dart';
 
 // Providers
 import 'features/jokes/presentation/providers/joke_provider.dart';
@@ -68,11 +70,13 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => ResetViewCounters(sl()));
   sl.registerLazySingleton(() => LikeJoke(sl()));
   sl.registerLazySingleton(() => DislikeJoke(sl()));
+  sl.registerLazySingleton(() => SyncWithRemote(sl()));
 
   // Admin use cases
   sl.registerLazySingleton(() => CreateJoke(sl()));
   sl.registerLazySingleton(() => UpdateJoke(sl()));
   sl.registerLazySingleton(() => DeleteJoke(sl()));
+  sl.registerLazySingleton(() => GetAllJokes(sl()));
 
   // ========== Providers ==========
 
@@ -80,10 +84,11 @@ Future<void> initializeDependencies() async {
   sl.registerFactory(
     () => JokeProvider(
       getNextJokeUseCase: sl(),
-      likeJokeUseCase: sl(),
-      dislikeJokeUseCase: sl(),
       incrementViewCountUseCase: sl(),
       resetViewCountersUseCase: sl(),
+      likeJokeUseCase: sl(),
+      dislikeJokeUseCase: sl(),
+      syncWithRemoteUseCase: sl(),
     ),
   );
 
@@ -93,6 +98,7 @@ Future<void> initializeDependencies() async {
       createJokeUseCase: sl(),
       updateJokeUseCase: sl(),
       deleteJokeUseCase: sl(),
+      getAllJokesUseCase: sl(),
     ),
   );
 }
