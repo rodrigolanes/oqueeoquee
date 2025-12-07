@@ -90,7 +90,7 @@ Fornecer uma experiência divertida e simples de piadas, com um sistema intelige
 - Tabela: `jokes`
 - Sincronização automática
 - CRUD completo para admins autorizados
-- Campos: `id`, `question`, `answer`, `view_count`, `is_active`, `created_at`, `updated_at`
+- Campos: `id`, `question`, `answer`, `view_count`, `like_count`, `dislike_count`, `is_active`, `created_at`, `updated_at`
 
 ### SharedPreferences (Cache Local)
 - Chave principal: `'jokes'`
@@ -104,7 +104,9 @@ Fornecer uma experiência divertida e simples de piadas, com um sistema intelige
   "id": int,
   "question": String,
   "answer": String,
-  "viewCount": int
+  "viewCount": int,
+  "likeCount": int?,
+  "dislikeCount": int?
 }
 ```
 
@@ -249,5 +251,5 @@ Quando adicionar features complexas, considere:
 
 ---
 
-**Última atualização**: 2025-11-28
-**Versão do app**: 5.2.0 (Build 26)
+**Última atualização**: 2025-12-07
+**Versão do app**: 5.6.0 (Build 32)

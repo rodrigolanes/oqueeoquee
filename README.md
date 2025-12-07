@@ -1,9 +1,9 @@
 # O que é o que é? 🤔😄
 
-[![Flutter](https://img.shields.io/badge/Flutter-5.2.0-02569B?logo=flutter)](https://flutter.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-5.6.0-02569B?logo=flutter)](https://flutter.dev)
 [![Platform](https://img.shields.io/badge/Platform-Android-green.svg)](https://www.android.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Build](https://img.shields.io/badge/Build-26-brightgreen.svg)]()
+[![Build](https://img.shields.io/badge/Build-32-brightgreen.svg)]()
 
 Aplicação Flutter de piadas "O que é o que é?" com sistema inteligente de contadores para garantir que você veja todas as piadas antes de repetir!
 
@@ -23,7 +23,10 @@ Aplicação Flutter de piadas "O que é o que é?" com sistema inteligente de co
 - 📱 **Responsivo** - funciona em diferentes tamanhos de tela
 - 🔒 **Sistema de autorização** - controle de acesso por dispositivo para funções admin
 - ➕ **CRUD completo** - criar, editar e deletar piadas (apenas admins)
-- 🐛 **Tela de debug** - acessível via 3 toques no título
+- �👎 **Sistema de votação** - like/dislike em piadas
+- 📊 **Estatísticas de engajamento** - visualize votos na edição (admin)
+- 📋 **Gerenciamento de piadas** - lista completa com estatísticas (admin)
+- �🐛 **Tela de debug** - acessível via 3 toques no título
 
 ### 🎮 Como Funciona
 
@@ -46,6 +49,7 @@ Aplicação Flutter de piadas "O que é o que é?" com sistema inteligente de co
 - **Dartz** - Programação funcional (Either monad)
 - **SharedPreferences** - Cache local
 - **Device Info Plus** - Identificação de dispositivo
+- **Google Mobile Ads** - Monetização com AdMob
 - **Material Design 3** - Design moderno e responsivo
 - **Clean Architecture** - Separação em camadas (Domain/Data/Presentation)
 
@@ -138,13 +142,17 @@ flutter build appbundle --release
 
 ## 📝 Versão Atual
 
-**Versão 5.2.0 (Build 26)**
+**Versão 5.6.0 (Build 32)**
 
 Esta é uma renovação completa da aplicação original, trazendo:
 - Código modernizado para Flutter 3.x com Clean Architecture
 - Backend Supabase com sincronização na nuvem
 - Sistema de autorização por dispositivo
 - Nova interface verde com Material Design 3
+- Sistema completo de votação (like/dislike)
+- Estatísticas de engajamento para admins
+- Gerenciamento completo de piadas (lista + edição)
+- Sincronização automática ao abrir app
 - Melhorias na experiência do usuário
 - Performance otimizada
 - CRUD completo de piadas (apenas admins)
