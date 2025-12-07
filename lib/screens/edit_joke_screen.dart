@@ -128,11 +128,37 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final likesCount = widget.joke.likeCount ?? 0;
+    final dislikesCount = widget.joke.dislikeCount ?? 0;
+    final voteDifference = likesCount - dislikesCount;
+    final isPositive = voteDifference > 0;
+    final isNeutral = voteDifference == 0;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editar Piada'),
         backgroundColor: Colors.amber,
         actions: [
+          // Indicador de aprovação
+          if (!isNeutral)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Chip(
+                avatar: Icon(
+                  isPositive ? Icons.thumb_up : Icons.thumb_down,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                label: Text(
+                  '${isPositive ? '+' : ''}$voteDifference',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                backgroundColor: isPositive ? Colors.green : Colors.red,
+              ),
+            ),
           IconButton(
             icon: const Icon(Icons.delete, color: Colors.red),
             onPressed: _isLoading ? null : _deleteJoke,
@@ -150,9 +176,54 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: Text(
-                        'ID: ${widget.joke.id}',
-                        style: Theme.of(context).textTheme.bodySmall,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'ID: ${widget.joke.id}',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                              const Spacer(),
+                              Icon(
+                                Icons.visibility,
+                                size: 16,
+                                color: Colors.grey.shade600,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${widget.joke.viewCount} views',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _VoteStatCard(
+                                  icon: Icons.thumb_up,
+                                  label: 'Gostei',
+                                  count: likesCount,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _VoteStatCard(
+                                  icon: Icons.thumb_down,
+                                  label: 'Não Gostei',
+                                  count: dislikesCount,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -162,6 +233,53 @@ class _EditJokeScreenState extends State<EditJokeScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Pergunta',
                       hintText: 'O que é o que é?\n...',
+
+class _VoteStatCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final int count;
+  final Color color;
+
+  const _VoteStatCard({
+    required this.icon,
+    required this.label,
+    required this.count,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 4),
+          Text(
+            count.toString(),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              color: color.withOpacity(0.8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.question_mark),
                     ),

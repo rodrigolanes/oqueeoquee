@@ -13,6 +13,8 @@ class JokeModel extends Joke {
     required super.deleted,
     required super.createdAt,
     required super.updatedAt,
+    super.likeCount,
+    super.dislikeCount,
   });
 
   /// Cria um JokeModel a partir de um Map JSON
@@ -31,6 +33,8 @@ class JokeModel extends Joke {
       updatedAt: json['updated_at'] != null
           ? DateTime.parse(json['updated_at'] as String)
           : createdAt,
+      likeCount: json['like_count'] as int?,
+      dislikeCount: json['dislike_count'] as int?,
     );
   }
 
@@ -46,6 +50,8 @@ class JokeModel extends Joke {
       'deleted': deleted,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      if (likeCount != null) 'like_count': likeCount,
+      if (dislikeCount != null) 'dislike_count': dislikeCount,
     };
   }
 
@@ -72,6 +78,8 @@ class JokeModel extends Joke {
       deleted: joke.deleted,
       createdAt: joke.createdAt,
       updatedAt: joke.updatedAt,
+      likeCount: joke.likeCount,
+      dislikeCount: joke.dislikeCount,
     );
   }
 
@@ -84,6 +92,8 @@ class JokeModel extends Joke {
     bool? deleted,
     DateTime? createdAt,
     DateTime? updatedAt,
+    int? likeCount,
+    int? dislikeCount,
   }) {
     return JokeModel(
       id: id ?? this.id,
@@ -93,6 +103,8 @@ class JokeModel extends Joke {
       deleted: deleted ?? this.deleted,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? DateTime.now(),
+      likeCount: likeCount ?? this.likeCount,
+      dislikeCount: dislikeCount ?? this.dislikeCount,
     );
   }
 }

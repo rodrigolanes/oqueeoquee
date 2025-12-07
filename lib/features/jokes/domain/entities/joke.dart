@@ -12,6 +12,8 @@ class Joke extends Equatable {
   final bool deleted;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final int? likeCount;
+  final int? dislikeCount;
 
   const Joke({
     required this.id,
@@ -21,6 +23,8 @@ class Joke extends Equatable {
     required this.deleted,
     required this.createdAt,
     required this.updatedAt,
+    this.likeCount,
+    this.dislikeCount,
   });
 
   /// Cria uma nova instância com propriedades opcionalmente atualizadas
@@ -29,6 +33,8 @@ class Joke extends Equatable {
     String? question,
     String? answer,
     bool? deleted,
+    int? likeCount,
+    int? dislikeCount,
   }) {
     return Joke(
       id: id,
@@ -38,6 +44,8 @@ class Joke extends Equatable {
       deleted: deleted ?? this.deleted,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
+      likeCount: likeCount ?? this.likeCount,
+      dislikeCount: dislikeCount ?? this.dislikeCount,
     );
   }
 
@@ -50,5 +58,7 @@ class Joke extends Equatable {
         deleted,
         createdAt,
         updatedAt,
+        likeCount,
+        dislikeCount,
       ];
 }
