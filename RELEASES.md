@@ -2,6 +2,41 @@
 
 ## 📋 Versões
 
+### [5.6.0] - 2025-12-07 (Build 32)
+#### 📊 Estatísticas de Votos na Edição de Piadas
+
+**Visibilidade de engajamento para administradores**
+
+#### ✨ Novidades
+- Estatísticas de votos (gostei/não gostei) exibidas na tela de edição de piadas
+- Indicador de aprovação (diferença de votos) no topo da tela
+- Cards com contador de "Gostei" e "Não Gostei" (somente leitura)
+- Feedback visual com cores (verde para positivo, vermelho para negativo)
+- Chip colorido mostrando diferença de votos (+X ou -X)
+
+#### 🛠️ Melhorias Técnicas
+- Campos `likeCount` e `dislikeCount` adicionados à entidade `Joke`
+- `JokeModel` atualizado para serializar/deserializar contadores de votos
+- Campos opcionais mantendo compatibilidade com versões anteriores
+- Integração com colunas `like_count` e `dislike_count` do Supabase (desde v5.4.0)
+- Todos os testes passando (105 testes)
+
+#### 📊 UX Admin
+- Administradores agora veem quais piadas têm melhor engajamento
+- Identificação rápida de piadas mal avaliadas (diferença negativa)
+- Tomada de decisão baseada em dados sobre piadas a manter/remover
+- Widget `_VoteStatCard` reutilizável com ícones e contadores
+- Design harmonioso integrado ao layout existente
+
+#### 🎨 Interface
+- Chip de aprovação no AppBar (canto superior direito)
+- Dois cards lado a lado mostrando likes e dislikes
+- Ícones semânticos (👍 verde, 👎 vermelho)
+- Informação posicionada abaixo do contador de visualizações
+- Visual clean mantendo foco na edição da piada
+
+---
+
 ### [5.5.0] - 2025-12-04 (Build 31)
 #### 🔄 Sincronização Automática e Gerenciamento de Piadas
 
