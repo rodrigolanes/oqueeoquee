@@ -353,8 +353,38 @@ void main() {
   group('syncWithRemote', () {
     test('deve sincronizar dados remotos com cache local', () async {
       // arrange
+      final tRemoteJokes = [
+        JokeModel(
+          id: 1,
+          question: 'Atualizada',
+          answer: 'Atualizada',
+          viewCount: 0, // ViewCount do servidor (será sobrescrito pelo local)
+          deleted: false,
+          createdAt: DateTime.utc(2025, 1, 1),
+          updatedAt: DateTime.utc(2025, 1, 1),
+        ),
+        JokeModel(
+          id: 2,
+          question: 'Pergunta 2',
+          answer: 'Resposta 2',
+          viewCount: 0,
+          deleted: false,
+          createdAt: DateTime.utc(2025, 1, 1),
+          updatedAt: DateTime.utc(2025, 1, 1),
+        ),
+        JokeModel(
+          id: 3,
+          question: 'Nova',
+          answer: 'Nova',
+          viewCount: 0,
+          deleted: false,
+          createdAt: DateTime.utc(2025, 1, 1),
+          updatedAt: DateTime.utc(2025, 1, 1),
+        ),
+      ];
+
       when(mockRemoteDataSource.getJokes())
-          .thenAnswer((_) async => tJokeModels);
+          .thenAnswer((_) async => tRemoteJokes);
       when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
       when(mockRemoteDataSource.syncViewCounts(any))
           .thenAnswer((_) async => {});
@@ -367,9 +397,70 @@ void main() {
       // assert
       expect(result, const Right(null));
       verify(mockRemoteDataSource.getJokes());
-      verify(mockRemoteDataSource.syncViewCounts(any));
+      verify(mockRemoteDataSource.syncViewCounts(tJokeModels));
       verify(mockLocalDataSource.clearCache());
-      verify(mockLocalDataSource.cacheJokes(tJokeModels));
+      
+      // Verifica que cacheJokes foi chamado com a lista mesclada
+      final captured = verify(mockLocalDataSource.cacheJokes(captureAny)).captured;
+      expect(captured.length, 1);
+      final cachedJokes = captured[0] as List<JokeModel>;
+      
+      // Deve ter 3 piadas (2 locais atualizadas + 1 nova)
+      expect(cachedJokes.length, 3);
+      
+      // Verifica que viewCounts locais foram preservados
+      final joke1 = cachedJokes.firstWhere((j) => j.id == 1);
+      expect(joke1.viewCount, 5); // Mantém viewCount local
+      expect(joke1.question, 'Atualizada'); // Mas atualiza outros campos
+      
+      final joke2 = cachedJokes.firstWhere((j) => j.id == 2);
+      expect(joke2.viewCount, 3); // Mantém viewCount local
+    });
+
+    test('deve remover piadas deletadas no remoto do cache local', () async {
+      // arrange
+      final tRemoteJokes = [
+        JokeModel(
+          id: 1,
+          question: 'Pergunta 1',
+          answer: 'Resposta 1',
+          viewCount: 5,
+          deleted: true, // Deletada no remoto
+          createdAt: DateTime.utc(2025, 1, 1),
+          updatedAt: DateTime.utc(2025, 1, 1),
+        ),
+        JokeModel(
+          id: 2,
+          question: 'Pergunta 2',
+          answer: 'Resposta 2',
+          viewCount: 3,
+          deleted: false,
+          createdAt: DateTime.utc(2025, 1, 1),
+          updatedAt: DateTime.utc(2025, 1, 1),
+        ),
+      ];
+
+      when(mockRemoteDataSource.getJokes())
+          .thenAnswer((_) async => tRemoteJokes);
+      when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
+      when(mockRemoteDataSource.syncViewCounts(any))
+          .thenAnswer((_) async => {});
+      when(mockLocalDataSource.clearCache()).thenAnswer((_) async => {});
+      when(mockLocalDataSource.cacheJokes(any)).thenAnswer((_) async => {});
+
+      // act
+      final result = await repository.syncWithRemote();
+
+      // assert
+      expect(result, const Right(null));
+      
+      final captured = verify(mockLocalDataSource.cacheJokes(captureAny)).captured;
+      final cachedJokes = captured[0] as List<JokeModel>;
+      
+      // Deve ter apenas 1 piada (id: 2), piada deletada (id: 1) foi removida
+      expect(cachedJokes.length, 1);
+      expect(cachedJokes.first.id, 2);
+      expect(cachedJokes.any((j) => j.id == 1), false);
     });
 
     test('deve retornar ServerFailure quando remoto falhar', () async {

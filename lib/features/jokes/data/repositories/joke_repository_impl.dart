@@ -5,6 +5,7 @@ import '../../domain/entities/joke.dart';
 import '../../domain/repositories/joke_repository.dart';
 import '../datasources/joke_local_datasource.dart';
 import '../datasources/joke_remote_datasource.dart';
+import '../models/joke_model.dart';
 
 /// Implementação concreta do JokeRepository
 ///
@@ -215,9 +216,44 @@ class JokeRepositoryImpl implements JokeRepository {
         await remoteDataSource.syncViewCounts(localJokes);
       }
 
-      // Atualiza cache local com dados remotos
+      // Cria um mapa de piadas remotas por ID para lookup eficiente
+      final remoteJokesMap = {for (var joke in remoteJokes) joke.id: joke};
+
+      // Mescla dados: mantém viewCounts locais, mas remove deletadas do remoto
+      final mergedJokes = <Joke>[];
+      
+      for (final localJoke in localJokes) {
+        final remoteJoke = remoteJokesMap[localJoke.id];
+        
+        if (remoteJoke != null) {
+          // Se existe no remoto e NÃO está deletada, adiciona mantendo viewCount local
+          if (!remoteJoke.deleted) {
+            mergedJokes.add(remoteJoke.copyWith(
+              viewCount: localJoke.viewCount,
+            ));
+          }
+          // Se está deletada no remoto, não adiciona (remove da base local)
+        }
+      }
+
+      // Adiciona piadas novas do remoto que não existem localmente (e não estão deletadas)
+      for (final remoteJoke in remoteJokes) {
+        final existsLocally = localJokes.any((j) => j.id == remoteJoke.id);
+        if (!existsLocally && !remoteJoke.deleted) {
+          mergedJokes.add(remoteJoke);
+        }
+      }
+
+      // Converte para JokeModel antes de salvar no cache
+      final mergedModels = mergedJokes
+          .map((joke) => joke is JokeModel 
+              ? joke 
+              : JokeModel.fromEntity(joke))
+          .toList();
+
+      // Atualiza cache local com piadas mescladas (sem as deletadas)
       await localDataSource.clearCache();
-      await localDataSource.cacheJokes(remoteJokes);
+      await localDataSource.cacheJokes(mergedModels);
 
       return const Right(null);
     } on ServerException catch (e) {

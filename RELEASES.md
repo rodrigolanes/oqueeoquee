@@ -2,6 +2,34 @@
 
 ## 📋 Versões
 
+### [5.6.2] - 2025-12-07 (Build 34)
+#### 🔄 Sincronização Aprimorada com Remoção de Piadas Deletadas
+
+**Limpeza automática de piadas deletadas**
+
+#### ✨ Novidades
+- Piadas marcadas como `deleted = true` no Supabase são removidas da base local
+- Sincronização inteligente que preserva progresso do usuário (viewCount)
+- Mesclagem otimizada de dados locais e remotos
+
+#### 🛠️ Melhorias Técnicas
+- Lógica de sincronização aprimorada no `syncWithRemote()`
+- Preservação de viewCount local durante atualização de dados remotos
+- Remoção automática de piadas deletadas do cache local
+- Adição seletiva de piadas novas (apenas ativas)
+
+#### 🔧 Correções
+- Piadas deletadas no servidor agora são removidas do dispositivo
+- Cache local sempre sincronizado apenas com piadas ativas
+- Dados remotos atualizados sem perder progresso local
+
+#### 🧪 Testes
+- Novo teste para verificar remoção de piadas deletadas
+- Teste de mesclagem de dados locais/remotos
+- Todos os 106 testes passando
+
+---
+
 ### [5.6.1] - 2025-12-07 (Build 33)
 #### 📊 Indicador de Progresso de Piadas
 

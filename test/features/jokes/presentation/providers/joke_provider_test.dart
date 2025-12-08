@@ -42,6 +42,11 @@ void main() {
     mockDislikeJoke = MockDislikeJoke();
     mockSyncWithRemote = MockSyncWithRemote();
     mockGetAllJokes = MockGetAllJokes();
+    
+    // Stubs padrão para evitar erros
+    when(mockResetViewCounters(any))
+        .thenAnswer((_) async => const Right(null));
+    
     provider = JokeProvider(
       getNextJokeUseCase: mockGetNextJoke,
       incrementViewCountUseCase: mockIncrementViewCount,
@@ -280,6 +285,7 @@ void main() {
   group('clearError', () {
     test('deve limpar mensagem de erro', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer(
         (_) async => const Left(CacheFailure('Erro')),
       );
@@ -295,6 +301,7 @@ void main() {
 
     test('deve notificar listeners', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer(
         (_) async => const Left(CacheFailure('Erro')),
       );

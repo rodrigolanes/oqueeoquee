@@ -37,7 +37,8 @@ class JokeProvider extends ChangeNotifier {
   String? _errorMessage;
   bool _answerRevealed = false;
   final Set<int> _votedJokes = {}; // IDs das piadas votadas na sessão atual
-  List<Joke> _allJokes = []; // Cache de todas as piadas para cálculo de progresso
+  List<Joke> _allJokes =
+      []; // Cache de todas as piadas para cálculo de progresso
 
   // Getters
   Joke? get currentJoke => _currentJoke;
@@ -53,7 +54,9 @@ class JokeProvider extends ChangeNotifier {
 
   /// Quantidade de piadas já vistas (viewCount > 0)
   int get jokesViewed {
-    return _allJokes.where((joke) => !joke.deleted && joke.viewCount > 0).length;
+    return _allJokes
+        .where((joke) => !joke.deleted && joke.viewCount > 0)
+        .length;
   }
 
   /// Progresso como porcentagem (0.0 a 1.0)
