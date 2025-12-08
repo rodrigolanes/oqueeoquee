@@ -10,6 +10,7 @@ import 'package:oqueeoquee/features/jokes/domain/usecases/reset_view_counters.da
 import 'package:oqueeoquee/features/jokes/domain/usecases/like_joke.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/dislike_joke.dart';
 import 'package:oqueeoquee/features/jokes/domain/usecases/sync_with_remote.dart';
+import 'package:oqueeoquee/features/jokes/domain/usecases/get_all_jokes.dart';
 import 'package:oqueeoquee/features/jokes/presentation/providers/joke_provider.dart';
 
 import 'joke_provider_test.mocks.dart';
@@ -20,7 +21,8 @@ import 'joke_provider_test.mocks.dart';
   ResetViewCounters,
   LikeJoke,
   DislikeJoke,
-  SyncWithRemote
+  SyncWithRemote,
+  GetAllJokes,
 ])
 void main() {
   late JokeProvider provider;
@@ -30,6 +32,7 @@ void main() {
   late MockLikeJoke mockLikeJoke;
   late MockDislikeJoke mockDislikeJoke;
   late MockSyncWithRemote mockSyncWithRemote;
+  late MockGetAllJokes mockGetAllJokes;
 
   setUp(() {
     mockGetNextJoke = MockGetNextJoke();
@@ -38,6 +41,7 @@ void main() {
     mockLikeJoke = MockLikeJoke();
     mockDislikeJoke = MockDislikeJoke();
     mockSyncWithRemote = MockSyncWithRemote();
+    mockGetAllJokes = MockGetAllJokes();
     provider = JokeProvider(
       getNextJokeUseCase: mockGetNextJoke,
       incrementViewCountUseCase: mockIncrementViewCount,
@@ -45,6 +49,7 @@ void main() {
       likeJokeUseCase: mockLikeJoke,
       dislikeJokeUseCase: mockDislikeJoke,
       syncWithRemoteUseCase: mockSyncWithRemote,
+      getAllJokesUseCase: mockGetAllJokes,
     );
   });
 
@@ -71,6 +76,7 @@ void main() {
   group('loadNextJoke', () {
     test('deve carregar piada com sucesso', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
 
       // act
@@ -87,6 +93,7 @@ void main() {
 
     test('deve setar isLoading durante carregamento', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer(
         (_) => Future.delayed(
           const Duration(milliseconds: 100),
@@ -108,6 +115,7 @@ void main() {
 
     test('deve limpar answerRevealed ao carregar nova piada', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
       when(mockIncrementViewCount(any))
           .thenAnswer((_) async => const Right(null));
@@ -126,6 +134,7 @@ void main() {
 
     test('deve setar errorMessage quando falhar', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer(
         (_) async => const Left(CacheFailure('Erro ao buscar piada')),
       );
@@ -141,6 +150,7 @@ void main() {
 
     test('deve notificar listeners', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
       int notifyCount = 0;
       provider.addListener(() => notifyCount++);
@@ -156,6 +166,7 @@ void main() {
   group('revealAnswer', () {
     test('deve revelar resposta quando há piada', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
       when(mockIncrementViewCount(any))
           .thenAnswer((_) async => const Right(null));
@@ -170,6 +181,7 @@ void main() {
 
     test('deve incrementar viewCount ao revelar', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
       when(mockIncrementViewCount(any))
           .thenAnswer((_) async => const Right(null));
@@ -196,6 +208,7 @@ void main() {
 
     test('não deve incrementar contador novamente se já revelado', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
       when(mockIncrementViewCount(any))
           .thenAnswer((_) async => const Right(null));
@@ -212,6 +225,7 @@ void main() {
 
     test('deve notificar listeners', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
       when(mockIncrementViewCount(any))
           .thenAnswer((_) async => const Right(null));
@@ -233,6 +247,7 @@ void main() {
       // arrange
       when(mockResetViewCounters(any))
           .thenAnswer((_) async => const Right(null));
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
 
       // act
@@ -299,6 +314,7 @@ void main() {
   group('reset', () {
     test('deve resetar todo o estado', () async {
       // arrange
+      when(mockGetAllJokes(any)).thenAnswer((_) async => Right([tJoke]));
       when(mockGetNextJoke(any)).thenAnswer((_) async => Right(tJoke));
       when(mockIncrementViewCount(any))
           .thenAnswer((_) async => const Right(null));

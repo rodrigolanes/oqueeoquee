@@ -89,6 +89,7 @@ Future<void> initializeDependencies() async {
       likeJokeUseCase: sl(),
       dislikeJokeUseCase: sl(),
       syncWithRemoteUseCase: sl(),
+      getAllJokesUseCase: sl(),
     ),
   );
 

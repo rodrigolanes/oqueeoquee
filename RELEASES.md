@@ -2,6 +2,43 @@
 
 ## 📋 Versões
 
+### [5.6.1] - 2025-12-07 (Build 33)
+#### 📊 Indicador de Progresso de Piadas
+
+**Acompanhamento visual de piadas vistas**
+
+#### ✨ Novidades
+- Barra de progresso visual no topo da tela principal
+- Contador "X de Y piadas vistas" em tempo real
+- Reset automático quando todas as piadas forem vistas
+- Design limpo e integrado ao tema verde do app
+
+#### 🛠️ Melhorias Técnicas
+- Novo use case `GetAllJokes` integrado ao `JokeProvider`
+- Getters de progresso: `totalJokes`, `jokesViewed`, `progressPercentage`
+- Cache interno de piadas para cálculo eficiente de progresso
+- Atualização automática do progresso ao revelar respostas
+- Reset silencioso e automático ao completar todas as piadas
+
+#### 📊 UX do Usuário
+- Usuários sabem quantas piadas ainda não viram
+- Motivação visual para ver todas as piadas
+- Experiência contínua sem necessidade de reset manual
+- Feedback imediato sobre progresso
+
+#### 🎨 Interface
+- Barra de progresso verde com animação suave
+- Texto informativo centralizado abaixo da barra
+- Posicionamento estratégico entre AppBar e card da piada
+- Cores harmoniosas (verde escuro para texto, verde claro para fundo)
+
+#### 🧪 Testes
+- Testes unitários atualizados para novos getters
+- Mocks de `GetAllJokes` adicionados
+- Todos os 105 testes passando
+
+---
+
 ### [5.6.0] - 2025-12-07 (Build 32)
 #### 📊 Estatísticas de Votos na Edição de Piadas
 

@@ -6,6 +6,7 @@ import '../../domain/usecases/reset_view_counters.dart';
 import '../../domain/usecases/like_joke.dart';
 import '../../domain/usecases/dislike_joke.dart';
 import '../../domain/usecases/sync_with_remote.dart';
+import '../../domain/usecases/get_all_jokes.dart';
 import '../../../../core/usecases/usecase.dart';
 
 /// Provider para gerenciar estado de piadas do usuário
@@ -18,6 +19,7 @@ class JokeProvider extends ChangeNotifier {
   final LikeJoke likeJokeUseCase;
   final DislikeJoke dislikeJokeUseCase;
   final SyncWithRemote syncWithRemoteUseCase;
+  final GetAllJokes getAllJokesUseCase;
 
   JokeProvider({
     required this.getNextJokeUseCase,
@@ -26,6 +28,7 @@ class JokeProvider extends ChangeNotifier {
     required this.likeJokeUseCase,
     required this.dislikeJokeUseCase,
     required this.syncWithRemoteUseCase,
+    required this.getAllJokesUseCase,
   });
 
   // Estado
@@ -34,6 +37,7 @@ class JokeProvider extends ChangeNotifier {
   String? _errorMessage;
   bool _answerRevealed = false;
   final Set<int> _votedJokes = {}; // IDs das piadas votadas na sessão atual
+  List<Joke> _allJokes = []; // Cache de todas as piadas para cálculo de progresso
 
   // Getters
   Joke? get currentJoke => _currentJoke;
@@ -41,6 +45,22 @@ class JokeProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get answerRevealed => _answerRevealed;
   bool get hasJoke => _currentJoke != null;
+
+  /// Total de piadas ativas
+  int get totalJokes {
+    return _allJokes.where((joke) => !joke.deleted).length;
+  }
+
+  /// Quantidade de piadas já vistas (viewCount > 0)
+  int get jokesViewed {
+    return _allJokes.where((joke) => !joke.deleted && joke.viewCount > 0).length;
+  }
+
+  /// Progresso como porcentagem (0.0 a 1.0)
+  double get progressPercentage {
+    if (totalJokes == 0) return 0.0;
+    return jokesViewed / totalJokes;
+  }
 
   /// Verifica se a piada atual já foi votada (like ou dislike)
   bool get hasVoted {
@@ -58,6 +78,16 @@ class JokeProvider extends ChangeNotifier {
     // Sincroniza com servidor se solicitado
     if (syncFirst) {
       await _syncWithRemote();
+    }
+
+    // Atualiza cache de todas as piadas para cálculo de progresso
+    await _updateJokesCache();
+
+    // Verifica se todas as piadas foram vistas e reseta automaticamente
+    if (totalJokes > 0 && jokesViewed >= totalJokes) {
+      debugPrint('🎉 Todas as $totalJokes piadas foram vistas! Resetando...');
+      await _autoResetCounters();
+      await _updateJokesCache();
     }
 
     final result = await getNextJokeUseCase(const NoParams());
@@ -115,9 +145,38 @@ class JokeProvider extends ChangeNotifier {
         // Log silencioso do erro, não afeta UX
         debugPrint('Erro ao incrementar contador: ${failure.message}');
       },
-      (_) {
+      (_) async {
         // Contador incrementado com sucesso
         debugPrint('ViewCount incrementado para piada $jokeId');
+        // Atualiza cache para refletir novo progresso
+        await _updateJokesCache();
+        notifyListeners();
+      },
+    );
+  }
+
+  /// Atualiza o cache de todas as piadas para cálculo de progresso
+  Future<void> _updateJokesCache() async {
+    final result = await getAllJokesUseCase(const NoParams());
+    result.fold(
+      (failure) {
+        debugPrint('Erro ao atualizar cache de piadas: ${failure.message}');
+      },
+      (jokes) {
+        _allJokes = jokes;
+      },
+    );
+  }
+
+  /// Reseta contadores automaticamente (silencioso, sem dialog)
+  Future<void> _autoResetCounters() async {
+    final result = await resetViewCountersUseCase(const NoParams());
+    result.fold(
+      (failure) {
+        debugPrint('Erro ao resetar contadores: ${failure.message}');
+      },
+      (_) {
+        debugPrint('Contadores resetados automaticamente');
       },
     );
   }

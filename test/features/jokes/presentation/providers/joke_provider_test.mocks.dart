@@ -14,6 +14,8 @@ import 'package:oqueeoquee/features/jokes/domain/repositories/joke_repository.da
     as _i2;
 import 'package:oqueeoquee/features/jokes/domain/usecases/dislike_joke.dart'
     as _i12;
+import 'package:oqueeoquee/features/jokes/domain/usecases/get_all_jokes.dart'
+    as _i14;
 import 'package:oqueeoquee/features/jokes/domain/usecases/get_next_joke.dart'
     as _i4;
 import 'package:oqueeoquee/features/jokes/domain/usecases/increment_view_count.dart'
@@ -272,4 +274,40 @@ class MockSyncWithRemote extends _i1.Mock implements _i13.SyncWithRemote {
           ),
         )),
       ) as _i5.Future<_i3.Either<_i6.Failure, void>>);
+}
+
+/// A class which mocks [GetAllJokes].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetAllJokes extends _i1.Mock implements _i14.GetAllJokes {
+  MockGetAllJokes() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.JokeRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeJokeRepository_0(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i2.JokeRepository);
+
+  @override
+  _i5.Future<_i3.Either<_i6.Failure, List<_i7.Joke>>> call(
+          _i8.NoParams? params) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #call,
+          [params],
+        ),
+        returnValue: _i5.Future<_i3.Either<_i6.Failure, List<_i7.Joke>>>.value(
+            _FakeEither_1<_i6.Failure, List<_i7.Joke>>(
+          this,
+          Invocation.method(
+            #call,
+            [params],
+          ),
+        )),
+      ) as _i5.Future<_i3.Either<_i6.Failure, List<_i7.Joke>>>);
 }

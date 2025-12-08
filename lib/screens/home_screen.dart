@@ -358,6 +358,41 @@ class _HomeScreenState extends State<HomeScreen>
                   child: SafeArea(
                     child: Column(
                       children: [
+                        // Indicador de Progresso
+                        if (jokeProvider.totalJokes > 0)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                            child: Column(
+                              children: [
+                                // Barra de progresso
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: LinearProgressIndicator(
+                                    value: jokeProvider.progressPercentage,
+                                    backgroundColor: Colors.green.shade100,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.green.shade600,
+                                    ),
+                                    minHeight: 8,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                // Texto do progresso
+                                Text(
+                                  '${jokeProvider.jokesViewed} de ${jokeProvider.totalJokes} piadas vistas',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.green.shade800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
                         // Card da piada
                         Expanded(
                           child: Center(
