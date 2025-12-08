@@ -62,6 +62,9 @@ key.properties
 .gradle/
 /android/.gradle/
 
+# Gradle reports
+**/build/reports/
+
 # Build outputs
 *.apk
 *.aab
