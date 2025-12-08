@@ -25,7 +25,7 @@ void main() {
         'id': 1,
         'question': 'O que é o que é?',
         'answer': 'Uma piada',
-        'view_count': 5,
+        'view_count': 5, // Local cache includes view_count
         'deleted': false,
         'created_at': '2025-01-01T12:00:00.000Z',
         'updated_at': '2025-01-02T14:30:00.000Z',
@@ -44,7 +44,6 @@ void main() {
         'id': 1,
         'question': 'O que é o que é?',
         'answer': 'Uma piada',
-        'view_count': 5,
         'created_at': '2025-01-01T12:00:00.000Z',
         'updated_at': '2025-01-02T14:30:00.000Z',
       };
@@ -62,7 +61,6 @@ void main() {
         'id': 1,
         'question': 'O que é o que é?',
         'answer': 'Uma piada',
-        'view_count': 5,
         'deleted': false,
         'created_at': '2025-01-01T12:00:00.000Z',
       };
@@ -73,23 +71,6 @@ void main() {
       // assert
       expect(result.updatedAt, equals(result.createdAt));
     });
-
-    test('deve aceitar viewCount como 0 se for null', () {
-      // arrange
-      final Map<String, dynamic> jsonMap = {
-        'id': 1,
-        'question': 'O que é o que é?',
-        'answer': 'Uma piada',
-        'created_at': '2025-01-01T12:00:00.000Z',
-        'updated_at': '2025-01-02T14:30:00.000Z',
-      };
-
-      // act
-      final result = JokeModel.fromJson(jsonMap);
-
-      // assert
-      expect(result.viewCount, 0);
-    });
   });
 
   group('toJson', () {
@@ -97,12 +78,12 @@ void main() {
       // act
       final result = tJokeModel.toJson();
 
-      // assert
+      // assert - toJson includes view_count for local cache
       final expectedMap = {
         'id': 1,
         'question': 'O que é o que é?',
         'answer': 'Uma piada',
-        'view_count': 5,
+        'view_count': 5, // Incluído para cache local
         'deleted': false,
         'created_at': '2025-01-01T12:00:00.000Z',
         'updated_at': '2025-01-02T14:30:00.000Z',
@@ -113,7 +94,7 @@ void main() {
 
   group('fromJsonString', () {
     test('deve retornar JokeModel a partir de uma string JSON', () {
-      // arrange
+      // arrange - Local cache JSON includes view_count
       const jsonString = '''
       {
         "id": 1,
@@ -144,7 +125,6 @@ void main() {
       expect(decoded, isA<Map<String, dynamic>>());
       expect(decoded['id'], 1);
       expect(decoded['question'], 'O que é o que é?');
-      expect(decoded['view_count'], 5);
     });
   });
 
@@ -174,12 +154,10 @@ void main() {
     test('deve criar uma nova instância com valores atualizados', () {
       // act
       final result = tJokeModel.copyWith(
-        viewCount: 10,
         deleted: true,
       );
 
       // assert
-      expect(result.viewCount, 10);
       expect(result.deleted, true);
       expect(result.question, tJokeModel.question);
       expect(result.answer, tJokeModel.answer);

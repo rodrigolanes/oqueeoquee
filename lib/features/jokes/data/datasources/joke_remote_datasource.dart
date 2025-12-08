@@ -35,12 +35,6 @@ abstract class JokeRemoteDataSource {
   /// Throws [ServerException] se houver erro ao deletar
   Future<void> deleteJoke(int id);
 
-  /// Sincroniza contadores de visualização com o servidor
-  ///
-  /// Envia os viewCounts locais para o servidor
-  /// Throws [ServerException] se houver erro na sincronização
-  Future<void> syncViewCounts(List<JokeModel> localJokes);
-
   /// Incrementa o contador de likes de uma piada
   ///
   /// Throws [ServerException] se houver erro ao incrementar

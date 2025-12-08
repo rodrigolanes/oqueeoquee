@@ -1,17 +1,19 @@
-🎉 Versão 5.1.1
+🎉 Versão 5.6.3
 
-✨ Novidades:
-• Piadas agora sincronizadas com a nuvem
-• Receba automaticamente novas piadas quando forem adicionadas
-• Contador de progresso aprimorado (começa em 1)
-• Sistema de migração de dados melhorado
+🛠️ Otimizações Técnicas:
+• Banco de dados otimizado para melhor desempenho
+• Sistema de progresso ainda mais eficiente
+• Sincronização aprimorada com a nuvem
 
-🐛 Correções:
-• Resolvido problema de crash ao atualizar o app
-• Sincronização mais confiável com o servidor
-• Reset automático de dados locais para garantir compatibilidade
-• Melhorias de estabilidade e desempenho
+✅ Melhorias:
+• Barra de progresso visual
+• Contador de piadas vistas em tempo real
+• Reset automático ao completar todas as piadas
+• Remoção automática de piadas deletadas
 
-💾 Importante: O contador de visualizações continua sendo mantido apenas no seu aparelho!
+📊 Experiência do Usuário:
+• Interface limpa e moderna
+• Carregamento mais rápido
+• Melhor estabilidade geral
 
 Divirta-se! 🤔🎭

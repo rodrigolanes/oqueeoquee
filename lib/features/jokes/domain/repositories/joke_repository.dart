@@ -13,10 +13,10 @@ abstract class JokeRepository {
   /// Busca a próxima piada baseada na estratégia de seleção
   Future<Either<Failure, Joke>> getNextJoke();
 
-  /// Incrementa o contador de visualizações de uma piada
+  /// Incrementa o contador de visualizações de uma piada (APENAS LOCAL)
   Future<Either<Failure, void>> incrementViewCount(int jokeId);
 
-  /// Reseta todos os contadores de visualização
+  /// Reseta todos os contadores de visualização (APENAS LOCAL)
   Future<Either<Failure, void>> resetViewCounters();
 
   /// Cria uma nova piada (admin only)

@@ -32,7 +32,6 @@ CREATE TABLE jokes (
   id INTEGER PRIMARY KEY,
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
-  view_count INTEGER NOT NULL DEFAULT 0,
   deleted BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL
@@ -43,13 +42,14 @@ CREATE TABLE jokes (
 
 ### Policies Configuradas:
 - ✅ **Leitura pública**: Qualquer usuário pode ler piadas
-- ❌ **Atualização**: Bloqueado (view_count é apenas local)
-- ❌ **Inserção/Deleção**: Bloqueado para usuários anônimos (apenas admin)
+- ❌ **Inserção/Deleção/Atualização**: Bloqueado para usuários anônimos (apenas admin)
 
 ### ⚠️ IMPORTANTE: view_count é LOCAL
+
 - O contador de visualizações **NÃO é sincronizado** com Supabase
-- Cada usuário tem seu próprio progresso no aparelho
+- Cada usuário tem seu próprio progresso no aparelho (armazenado em SharedPreferences)
 - Apenas question/answer são sincronizados do servidor
+- O Supabase **não tem a coluna view_count** (foi removida)
 
 ## 🔄 Sincronização
 
@@ -68,21 +68,18 @@ O app usa uma estratégia híbrida com **view_count local**:
 Inicialização
     ↓
 Carrega cache local (SharedPreferences)
-    ↓
-Busca piadas remotas (Supabase)
-    ↓
 Mescla dados (atualiza apenas question/answer)
     ↓
 PRESERVA view_count local de cada piada
     ↓
 Salva localmente
     ↓
-Exibe piada
+Exibe piada com menor viewCount
 ```
 
-### Fluxo de Atualização:
+### Fluxo de Visualização:
 ```
-Usuário clica "Próxima"
+Usuário clica "Ver Resposta"
     ↓
 Incrementa view_count localmente
     ↓
@@ -91,31 +88,15 @@ Salva APENAS no SharedPreferences
 (NÃO sincroniza com Supabase)
     ↓
 Cada usuário mantém seu próprio progresso
+    ↓
+Próxima piada: escolhe a com menor viewCount
+Salva localmente
+    ↓
+3. **Importante**: view_count permanece local, não aparece no Supabase
+Exibe piada
 ```
 
-## 📝 Credenciais
-
-**⚠️ IMPORTANTE**: As credenciais do Supabase estão em `lib/config/supabase_config.dart` (não commitado).
-
-Para configurar em novo ambiente:
-1. Copie `lib/config/supabase_config.example.dart` para `lib/config/supabase_config.dart`
-2. Preencha com suas credenciais do Supabase
-3. O arquivo já está no `.gitignore` e não será commitado
-
-**Project URL**: `https://[SEU_PROJETO].supabase.co`
-**API Key (anon)**: Disponível no dashboard do Supabase
-
-## 🧪 Testando a Integração
-
-### Verificar Sincronização de Piadas:
-1. Abra o app e visualize algumas piadas
-2. Verifique que novas piadas do servidor aparecem automaticamente
-3. **Importante**: view_count permanece local, não aparece no Supabase
-
-### Teste Offline:
-1. Ative modo avião no celular
-2. Abra o app (deve funcionar com cache local)
-3. Visualize piadas (contador incrementa localmente)
+## 📝 Credenciais (contador incrementa localmente)
 4. Desative modo avião
 5. Feche e abra o app (busca piadas novas, mantém contadores locais)
 
@@ -123,7 +104,30 @@ Para configurar em novo ambiente:
 1. Instale o app em dois aparelhos diferentes
 2. Visualize piadas no aparelho A
 3. Verifique que o aparelho B tem contadores zerados (independentes)
-4. Cada usuário tem seu próprio progresso local
+4. Cada usuário tem seu próprio progresso local `lib/config/supabase_config.dart` (não commitado).
+
+Para configurar em novo ambiente:
+1. Copie `lib/config/supabase_config.example.dart` para `lib/config/supabase_config.dart`
+2. Preencha com suas credenciais do Supabase
+3. O arquivo já está no `.gitignore` e não será commitado
+
+****NORMAL**: view_count NÃO sincroniza (é local por design)
+- Se piadas novas não aparecem:
+  - Verifique logs: `debugPrint('Erro ao sincronizar com Supabase: $e')`
+  - Confirme que a tabela existe e RLS está ativo
+  - Teste query manual no SQL Editor:
+    ```sql
+    SELECT * FROM jokes WHERE deleted = false ORDER BY id;
+  ### Verificar Sincronização de Piadas:
+1. Abra o app e visualize algumas piadas
+2. Verifique que novas piadas do servidor aparecem automaticamente
+
+### Teste Offline:
+1. Ative modo avião no celular
+2. Abra o app (deve funcionar com cache local)
+3. Visualize piadas
+4. Desative modo avião
+5. Feche e abra o app (busca piadas novas do servidor)
 
 ## 🐛 Troubleshooting
 
@@ -133,14 +137,12 @@ Para configurar em novo ambiente:
 - Verifique se RLS está habilitado com policies corretas
 
 ### Piadas não sincronizam
-- **NORMAL**: view_count NÃO sincroniza (é local por design)
-- Se piadas novas não aparecem:
-  - Verifique logs: `debugPrint('Erro ao sincronizar com Supabase: $e')`
-  - Confirme que a tabela existe e RLS está ativo
-  - Teste query manual no SQL Editor:
-    ```sql
-    SELECT * FROM jokes WHERE deleted = false ORDER BY id;
-    ```
+- Verifique logs: `debugPrint('Erro ao sincronizar com Supabase: $e')`
+- Confirme que a tabela existe e RLS está ativo
+- Teste query manual no SQL Editor:
+  ```sql
+  SELECT * FROM jokes WHERE deleted = false ORDER BY id;
+  ```
 
 ### App não inicia
 - Rode `flutter pub get`

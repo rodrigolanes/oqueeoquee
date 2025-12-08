@@ -12,6 +12,7 @@ import '../../../../core/usecases/usecase.dart';
 /// Provider para gerenciar estado de piadas do usuário
 ///
 /// Usa Clean Architecture com use cases do domínio
+/// viewCount é gerenciado APENAS LOCALMENTE (não sincroniza com Supabase)
 class JokeProvider extends ChangeNotifier {
   final GetNextJoke getNextJokeUseCase;
   final IncrementViewCount incrementViewCountUseCase;
@@ -38,7 +39,7 @@ class JokeProvider extends ChangeNotifier {
   bool _answerRevealed = false;
   final Set<int> _votedJokes = {}; // IDs das piadas votadas na sessão atual
   List<Joke> _allJokes =
-      []; // Cache de todas as piadas para cálculo de progresso
+      []; // Cache de todas as piadas para cálculo de progresso (APENAS LOCAL)
 
   // Getters
   Joke? get currentJoke => _currentJoke;
@@ -52,14 +53,14 @@ class JokeProvider extends ChangeNotifier {
     return _allJokes.where((joke) => !joke.deleted).length;
   }
 
-  /// Quantidade de piadas já vistas (viewCount > 0)
+  /// Quantidade de piadas já vistas (viewCount > 0) - APENAS LOCAL
   int get jokesViewed {
     return _allJokes
         .where((joke) => !joke.deleted && joke.viewCount > 0)
         .length;
   }
 
-  /// Progresso como porcentagem (0.0 a 1.0)
+  /// Progresso como porcentagem (0.0 a 1.0) - APENAS LOCAL
   double get progressPercentage {
     if (totalJokes == 0) return 0.0;
     return jokesViewed / totalJokes;
@@ -78,7 +79,7 @@ class JokeProvider extends ChangeNotifier {
     _answerRevealed = false;
     notifyListeners();
 
-    // Sincroniza com servidor se solicitado
+    // Sincroniza com servidor se solicitado (preserva viewCount local)
     if (syncFirst) {
       await _syncWithRemote();
     }
@@ -86,9 +87,10 @@ class JokeProvider extends ChangeNotifier {
     // Atualiza cache de todas as piadas para cálculo de progresso
     await _updateJokesCache();
 
-    // Verifica se todas as piadas foram vistas e reseta automaticamente
+    // Verifica se todas as piadas foram vistas e reseta automaticamente (APENAS LOCAL)
     if (totalJokes > 0 && jokesViewed >= totalJokes) {
-      debugPrint('🎉 Todas as $totalJokes piadas foram vistas! Resetando...');
+      debugPrint(
+          '🎉 Todas as $totalJokes piadas foram vistas! Resetando contadores locais...');
       await _autoResetCounters();
       await _updateJokesCache();
     }
@@ -129,12 +131,12 @@ class JokeProvider extends ChangeNotifier {
       _answerRevealed = true;
       notifyListeners();
 
-      // Incrementa contador de visualização
+      // Incrementa contador de visualização (APENAS LOCAL)
       _incrementCurrentJokeViewCount();
     }
   }
 
-  /// Incrementa viewCount da piada atual
+  /// Incrementa viewCount da piada atual (APENAS LOCAL)
   Future<void> _incrementCurrentJokeViewCount() async {
     if (_currentJoke == null) return;
 
@@ -146,11 +148,11 @@ class JokeProvider extends ChangeNotifier {
     result.fold(
       (failure) {
         // Log silencioso do erro, não afeta UX
-        debugPrint('Erro ao incrementar contador: ${failure.message}');
+        debugPrint('Erro ao incrementar contador local: ${failure.message}');
       },
       (_) async {
         // Contador incrementado com sucesso
-        debugPrint('ViewCount incrementado para piada $jokeId');
+        debugPrint('ViewCount local incrementado para piada $jokeId');
         // Atualiza cache para refletir novo progresso
         await _updateJokesCache();
         notifyListeners();
@@ -158,7 +160,7 @@ class JokeProvider extends ChangeNotifier {
     );
   }
 
-  /// Atualiza o cache de todas as piadas para cálculo de progresso
+  /// Atualiza o cache de todas as piadas para cálculo de progresso (APENAS LOCAL)
   Future<void> _updateJokesCache() async {
     final result = await getAllJokesUseCase(const NoParams());
     result.fold(
@@ -171,20 +173,20 @@ class JokeProvider extends ChangeNotifier {
     );
   }
 
-  /// Reseta contadores automaticamente (silencioso, sem dialog)
+  /// Reseta contadores automaticamente (silencioso, sem dialog) - APENAS LOCAL
   Future<void> _autoResetCounters() async {
     final result = await resetViewCountersUseCase(const NoParams());
     result.fold(
       (failure) {
-        debugPrint('Erro ao resetar contadores: ${failure.message}');
+        debugPrint('Erro ao resetar contadores locais: ${failure.message}');
       },
       (_) {
-        debugPrint('Contadores resetados automaticamente');
+        debugPrint('Contadores locais resetados automaticamente');
       },
     );
   }
 
-  /// Reseta todos os contadores de visualização
+  /// Reseta todos os contadores de visualização (APENAS LOCAL)
   Future<void> resetCounters() async {
     _isLoading = true;
     _errorMessage = null;

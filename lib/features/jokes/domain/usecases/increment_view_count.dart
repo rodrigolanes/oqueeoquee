@@ -4,6 +4,11 @@ import 'package:oqueeoquee/core/error/failures.dart';
 import 'package:oqueeoquee/core/usecases/usecase.dart';
 import 'package:oqueeoquee/features/jokes/domain/repositories/joke_repository.dart';
 
+/// Incrementa o contador de visualizações de uma piada (APENAS LOCAL)
+///
+/// Este contador NÃO é sincronizado com o Supabase.
+/// É usado apenas para controlar quais piadas já foram vistas
+/// e garantir que todas sejam mostradas antes de repetir.
 class IncrementViewCount implements UseCase<void, IncrementViewCountParams> {
   final JokeRepository repository;
 

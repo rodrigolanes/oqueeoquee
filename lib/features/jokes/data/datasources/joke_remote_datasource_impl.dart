@@ -43,7 +43,6 @@ class JokeRemoteDataSourceImpl implements JokeRemoteDataSource {
       final data = {
         'question': question.trim(),
         'answer': answer.trim(),
-        'view_count': 0,
         'deleted': false,
         'created_at': now.toIso8601String(),
         'updated_at': now.toIso8601String(),
@@ -110,23 +109,6 @@ class JokeRemoteDataSourceImpl implements JokeRemoteDataSource {
       throw ServerException('Erro ao deletar piada: ${e.message}');
     } catch (e) {
       throw ServerException('Erro ao deletar piada: ${e.toString()}');
-    }
-  }
-
-  @override
-  Future<void> syncViewCounts(List<JokeModel> localJokes) async {
-    try {
-      // Prepara batch de updates para sincronizar viewCounts
-      for (final joke in localJokes) {
-        await supabaseClient.from('jokes').update({
-          'view_count': joke.viewCount,
-          'updated_at': joke.updatedAt.toIso8601String(),
-        }).eq('id', joke.id);
-      }
-    } on PostgrestException catch (e) {
-      throw ServerException('Erro ao sincronizar contadores: ${e.message}');
-    } catch (e) {
-      throw ServerException('Erro ao sincronizar contadores: ${e.toString()}');
     }
   }
 

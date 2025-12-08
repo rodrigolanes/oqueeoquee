@@ -386,8 +386,6 @@ void main() {
       when(mockRemoteDataSource.getJokes())
           .thenAnswer((_) async => tRemoteJokes);
       when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
-      when(mockRemoteDataSource.syncViewCounts(any))
-          .thenAnswer((_) async => {});
       when(mockLocalDataSource.clearCache()).thenAnswer((_) async => {});
       when(mockLocalDataSource.cacheJokes(any)).thenAnswer((_) async => {});
 
@@ -397,22 +395,22 @@ void main() {
       // assert
       expect(result, const Right(null));
       verify(mockRemoteDataSource.getJokes());
-      verify(mockRemoteDataSource.syncViewCounts(tJokeModels));
       verify(mockLocalDataSource.clearCache());
-      
+
       // Verifica que cacheJokes foi chamado com a lista mesclada
-      final captured = verify(mockLocalDataSource.cacheJokes(captureAny)).captured;
+      final captured =
+          verify(mockLocalDataSource.cacheJokes(captureAny)).captured;
       expect(captured.length, 1);
       final cachedJokes = captured[0] as List<JokeModel>;
-      
+
       // Deve ter 3 piadas (2 locais atualizadas + 1 nova)
       expect(cachedJokes.length, 3);
-      
+
       // Verifica que viewCounts locais foram preservados
       final joke1 = cachedJokes.firstWhere((j) => j.id == 1);
       expect(joke1.viewCount, 5); // Mantém viewCount local
       expect(joke1.question, 'Atualizada'); // Mas atualiza outros campos
-      
+
       final joke2 = cachedJokes.firstWhere((j) => j.id == 2);
       expect(joke2.viewCount, 3); // Mantém viewCount local
     });
@@ -443,8 +441,6 @@ void main() {
       when(mockRemoteDataSource.getJokes())
           .thenAnswer((_) async => tRemoteJokes);
       when(mockLocalDataSource.getJokes()).thenAnswer((_) async => tJokeModels);
-      when(mockRemoteDataSource.syncViewCounts(any))
-          .thenAnswer((_) async => {});
       when(mockLocalDataSource.clearCache()).thenAnswer((_) async => {});
       when(mockLocalDataSource.cacheJokes(any)).thenAnswer((_) async => {});
 
@@ -453,10 +449,11 @@ void main() {
 
       // assert
       expect(result, const Right(null));
-      
-      final captured = verify(mockLocalDataSource.cacheJokes(captureAny)).captured;
+
+      final captured =
+          verify(mockLocalDataSource.cacheJokes(captureAny)).captured;
       final cachedJokes = captured[0] as List<JokeModel>;
-      
+
       // Deve ter apenas 1 piada (id: 2), piada deletada (id: 1) foi removida
       expect(cachedJokes.length, 1);
       expect(cachedJokes.first.id, 2);

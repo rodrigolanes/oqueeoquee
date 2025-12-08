@@ -27,7 +27,8 @@ class JokeModel extends Joke {
       id: json['id'] as int,
       question: json['question'] as String,
       answer: json['answer'] as String,
-      viewCount: (json['view_count'] as int?) ?? 0,
+      viewCount: (json['view_count'] as int?) ??
+          0, // Default 0 se vier do Supabase sem view_count
       deleted: (json['deleted'] as bool?) ?? false,
       createdAt: createdAt,
       updatedAt: json['updated_at'] != null
@@ -40,13 +41,14 @@ class JokeModel extends Joke {
 
   /// Converte o JokeModel para um Map JSON
   ///
-  /// Usado para serializar dados para o banco local ou API remota
+  /// view_count é salvo apenas no cache local (SharedPreferences)
+  /// NÃO é enviado para o Supabase
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'question': question,
       'answer': answer,
-      'view_count': viewCount,
+      'view_count': viewCount, // Salvo APENAS localmente
       'deleted': deleted,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),

@@ -60,7 +60,7 @@ class JokeRepositoryImpl implements JokeRepository {
             return const Left(CacheFailure('Nenhuma piada ativa disponível'));
           }
 
-          // Estratégia: retorna a piada com menor viewCount
+          // Estratégia: retorna a piada com menor viewCount (APENAS LOCAL)
           activeJokes.sort((a, b) => a.viewCount.compareTo(b.viewCount));
 
           // Se houver empate, usa a mais antiga (menor ID)
@@ -210,50 +210,32 @@ class JokeRepositoryImpl implements JokeRepository {
       // Busca piadas remotas
       final remoteJokes = await remoteDataSource.getJokes();
 
-      // Sincroniza viewCounts locais com servidor
+      // Busca piadas locais para preservar viewCount
       final localJokes = await localDataSource.getJokes();
-      if (localJokes.isNotEmpty) {
-        await remoteDataSource.syncViewCounts(localJokes);
-      }
 
-      // Cria um mapa de piadas remotas por ID para lookup eficiente
-      final remoteJokesMap = {for (var joke in remoteJokes) joke.id: joke};
+      // Cria um mapa de piadas locais por ID para preservar viewCount
+      final localJokesMap = {for (var joke in localJokes) joke.id: joke};
 
-      // Mescla dados: mantém viewCounts locais, mas remove deletadas do remoto
+      // Mescla dados: usa dados do remoto, mas preserva viewCount local
       final mergedJokes = <Joke>[];
-      
-      for (final localJoke in localJokes) {
-        final remoteJoke = remoteJokesMap[localJoke.id];
-        
-        if (remoteJoke != null) {
-          // Se existe no remoto e NÃO está deletada, adiciona mantendo viewCount local
-          if (!remoteJoke.deleted) {
-            mergedJokes.add(remoteJoke.copyWith(
-              viewCount: localJoke.viewCount,
-            ));
-          }
-          // Se está deletada no remoto, não adiciona (remove da base local)
-        }
-      }
 
-      // Adiciona piadas novas do remoto que não existem localmente (e não estão deletadas)
       for (final remoteJoke in remoteJokes) {
-        final existsLocally = localJokes.any((j) => j.id == remoteJoke.id);
-        if (!existsLocally && !remoteJoke.deleted) {
-          mergedJokes.add(remoteJoke);
+        if (!remoteJoke.deleted) {
+          final localJoke = localJokesMap[remoteJoke.id];
+          // Preserva viewCount local se existir, senão usa 0
+          final viewCount = localJoke?.viewCount ?? 0;
+          mergedJokes.add(remoteJoke.copyWith(viewCount: viewCount));
         }
       }
 
       // Converte para JokeModel antes de salvar no cache
-      final mergedModels = mergedJokes
-          .map((joke) => joke is JokeModel 
-              ? joke 
-              : JokeModel.fromEntity(joke))
+      final modelsToCache = mergedJokes
+          .map((joke) => joke is JokeModel ? joke : JokeModel.fromEntity(joke))
           .toList();
 
-      // Atualiza cache local com piadas mescladas (sem as deletadas)
+      // Atualiza cache local com piadas remotas (preservando viewCount local)
       await localDataSource.clearCache();
-      await localDataSource.cacheJokes(mergedModels);
+      await localDataSource.cacheJokes(modelsToCache);
 
       return const Right(null);
     } on ServerException catch (e) {

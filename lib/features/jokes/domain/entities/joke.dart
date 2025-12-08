@@ -8,7 +8,7 @@ class Joke extends Equatable {
   final int id;
   final String question;
   final String answer;
-  final int viewCount;
+  final int viewCount; // Local only - not synced with Supabase
   final bool deleted;
   final DateTime createdAt;
   final DateTime updatedAt;

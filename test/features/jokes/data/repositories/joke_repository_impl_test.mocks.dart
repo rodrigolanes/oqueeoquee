@@ -250,17 +250,6 @@ class MockJokeRemoteDataSource extends _i1.Mock
       ) as _i4.Future<void>);
 
   @override
-  _i4.Future<void> syncViewCounts(List<_i2.JokeModel>? localJokes) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #syncViewCounts,
-          [localJokes],
-        ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
-
-  @override
   _i4.Future<void> incrementLike(int? jokeId) => (super.noSuchMethod(
         Invocation.method(
           #incrementLike,

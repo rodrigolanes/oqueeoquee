@@ -1,17 +1,19 @@
-🎉 Version 5.1.1
+🎉 Version 5.6.3
 
-✨ What's new:
-• Jokes now synced with the cloud
-• Automatically receive new jokes when added
-• Improved progress counter (starts at 1)
-• Enhanced data migration system
+🛠️ Technical Optimizations:
+• Optimized database for better performance
+• Even more efficient progress system
+• Improved cloud synchronization
 
-🐛 Bug fixes:
-• Fixed app crash when updating
-• More reliable server synchronization
-• Automatic local data reset for compatibility
-• Stability and performance improvements
+✅ Improvements:
+• Visual progress bar
+• Real-time jokes viewed counter
+• Auto-reset when all jokes completed
+• Automatic removal of deleted jokes
 
-💾 Important: View counter remains stored only on your device!
+📊 User Experience:
+• Clean and modern interface
+• Faster loading
+• Better overall stability
 
 Have fun! 🤔🎭

@@ -15,12 +15,12 @@ abstract class JokeLocalDataSource {
   /// Throws [CacheException] se houver erro ao salvar no cache
   Future<void> cacheJokes(List<JokeModel> jokes);
 
-  /// Incrementa o contador de visualizações de uma piada
+  /// Incrementa o contador de visualizações de uma piada (APENAS LOCAL)
   ///
   /// Throws [CacheException] se a piada não for encontrada ou erro ao salvar
   Future<void> incrementViewCount(int jokeId);
 
-  /// Reseta todos os contadores de visualização para zero
+  /// Reseta todos os contadores de visualização para zero (APENAS LOCAL)
   ///
   /// Throws [CacheException] se houver erro ao salvar
   Future<void> resetViewCounters();

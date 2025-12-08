@@ -2,6 +2,48 @@
 
 ## 📋 Versões
 
+### [5.6.3] - 2025-12-07 (Build 35)
+#### 🗄️ Otimização do Banco de Dados - view_count Local-Only
+
+**Remoção do view_count do Supabase**
+
+#### ✨ Mudanças Técnicas
+- **view_count removido do Supabase**: Campo eliminado da tabela `jokes` no PostgreSQL
+- **view_count mantido localmente**: Funcionalidade de progresso preservada via SharedPreferences
+- **Estratégia local-only**: viewCount gerenciado exclusivamente no dispositivo
+- **Sincronização otimizada**: Dados remotos (question/answer) mesclados com viewCount local
+
+#### 🛠️ Melhorias de Arquitetura
+- JokeModel: `toJson` inclui view_count apenas para cache local
+- JokeModel: `fromJson` aceita view_count com default 0 (compatibilidade)
+- Repository: `syncWithRemote` preserva viewCount local ao mesclar dados
+- Remote Datasource: `createJoke` não envia view_count ao Supabase
+- Removido método `syncViewCounts` (não mais necessário)
+
+#### 📊 Comportamento Mantido
+- ✅ Seleção de piadas por menor viewCount
+- ✅ Auto-reset quando todas piadas vistas
+- ✅ Barra de progresso funcional
+- ✅ Incremento de viewCount ao revelar resposta
+- ✅ Reset manual de contadores
+
+#### 🗃️ Migração de Banco
+- Script SQL criado: `supabase_migration_remove_view_count.sql`
+- Remove índice `idx_jokes_view_count`
+- Remove coluna `view_count` da tabela `jokes`
+- Schema atualizado em `supabase_setup.sql`
+
+#### 🧪 Testes
+- Todos os 99 testes passando
+- Testes atualizados para refletir viewCount local
+- flutter analyze: sem erros
+
+#### 📝 Documentação
+- SUPABASE_CONFIG.md atualizado com estratégia local-only
+- Comentários no código explicando local vs remoto
+
+---
+
 ### [5.6.2] - 2025-12-07 (Build 34)
 #### 🔄 Sincronização Aprimorada com Remoção de Piadas Deletadas
 
